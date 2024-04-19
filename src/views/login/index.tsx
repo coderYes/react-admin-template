@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
+import localcache from '@/utils/cache'
 
 interface IProps {
   children?: ReactNode
@@ -9,7 +10,8 @@ interface IProps {
 const Login: FC<IProps> = () => {
   const navigate = useNavigate()
   const goHome = () => {
-    navigate('/main/home')
+    localcache.setCache('token', '123')
+    navigate('/')
   }
   return (
     <div className="h-full">

@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
 import { MainWrapper } from './style'
 import { Outlet } from 'react-router-dom'
-import rootStore from '@/store'
-import { observer } from 'mobx-react-lite'
-const { commonStore } = rootStore
 
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 import { Layout, Button } from 'antd'
 const { Header, Sider, Content } = Layout
+
 import { requireAssetsImg } from '@/utils/common'
+import { addRouteToMenu } from '@/utils/menu'
+
+import rootStore from '@/store'
+import { observer } from 'mobx-react-lite'
+const { commonStore } = rootStore
+import getRouter from '@/mock/getRouter'
 
 interface IProps {
   children?: ReactNode
@@ -17,9 +21,18 @@ interface IProps {
 
 const Home: FC<IProps> = () => {
   const [collapsed, setCollapsed] = useState(false)
+
+  useEffect(() => {
+    const menu = getRouter()
+    if (menu.code !== 200) return
+    commonStore.setMune(menu.data)
+    commonStore.setRoutes(addRouteToMenu(menu.data))
+  }, [])
+
   const toggleCollapsed = () => {
     setCollapsed(!collapsed)
   }
+
   return (
     <MainWrapper>
       <Layout className="h-full">
@@ -33,7 +46,7 @@ const Home: FC<IProps> = () => {
           <Header>
             <div className="navbar">
               <div className="hamburger-container">
-                <Button type="primary" onClick={toggleCollapsed}>
+                <Button type="primary" size="small" onClick={toggleCollapsed}>
                   {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 </Button>
               </div>
@@ -42,7 +55,9 @@ const Home: FC<IProps> = () => {
               </div>
             </div>
           </Header>
-          <Content>Content</Content>
+          <Content>
+            <Outlet />
+          </Content>
         </Layout>
       </Layout>
     </MainWrapper>

@@ -1,27 +1,28 @@
 import React, { lazy } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import type { RouteObject } from 'react-router-dom'
 const Login = lazy(() => import('@/views/login'))
 const Main = lazy(() => import('@/views/main'))
 const NotFound = lazy(() => import('@/views/notFound'))
+import BeforeRouter from '@/components/boforeRouter'
 
-const router = createBrowserRouter([
+const baseRouter: RouteObject[] = [
   {
     path: '/',
-    element: <Navigate to="/login" />
+    element: (
+      <BeforeRouter>
+        <Main />
+      </BeforeRouter>
+    ),
+    children: [{ path: '*', element: <></> }]
   },
   {
     path: '/login',
     element: <Login />
   },
   {
-    path: '/main/*',
-    element: <Main />,
-    children: [{ path: '*', element: <></> }]
-  },
-  {
     path: '*',
     element: <NotFound />
   }
-])
+]
 
-export default router
+export default baseRouter

@@ -10,7 +10,7 @@ interface IProps {
 const BeforeRouter: FC<IProps> = ({ children }) => {
   const { pathname } = useLocation()
   const token = localcache.getCache('token')
-  if (!token && pathname !== '/login' && !pathname.includes('/tour/vr')) {
+  if (!token && pathname !== '/login') {
     return <Navigate to="/login" />
   } else {
     return children

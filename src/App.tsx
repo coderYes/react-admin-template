@@ -3,8 +3,6 @@ import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import GetRoutes from './router'
 function App() {
-  console.log('aa')
-
   return (
     <ConfigProvider
       locale={zhCN}
