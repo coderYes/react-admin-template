@@ -8,6 +8,7 @@ export default function () {
         name: '首页',
         path: '/home',
         hidden: false,
+        icon: 'SlackSquareOutlined',
         componentPath: '/home'
       },
       {
@@ -15,6 +16,7 @@ export default function () {
         name: '数据统计',
         path: '/dashboard',
         hidden: false,
+        icon: 'SlackSquareOutlined',
         componentPath: '',
         children: [
           {
@@ -22,6 +24,7 @@ export default function () {
             name: '数据分析',
             path: '/dashboard/analysis',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/dashboard/analysis'
           }
         ]
@@ -31,6 +34,7 @@ export default function () {
         name: '系统管理',
         path: '/system',
         hidden: false,
+        icon: 'SlackSquareOutlined',
         componentPath: '',
         children: [
           {
@@ -38,6 +42,7 @@ export default function () {
             name: '用户管理',
             path: '/system/user',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/system/user'
           },
           {
@@ -45,6 +50,7 @@ export default function () {
             name: '角色管理',
             path: '/system/role',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/system/role'
           },
           {
@@ -52,6 +58,7 @@ export default function () {
             name: '菜单管理',
             path: '/system/menu',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/system/menu'
           },
           {
@@ -59,6 +66,7 @@ export default function () {
             name: '登录日志',
             path: '/system/loginlog',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/system/loginlog'
           }
         ]
@@ -68,6 +76,7 @@ export default function () {
         name: '全景管理',
         path: '/panorama',
         hidden: false,
+        icon: 'SlackSquareOutlined',
         componentPath: '',
         children: [
           {
@@ -75,6 +84,7 @@ export default function () {
             name: '全景列表',
             path: '/panorama/panolist',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/panorama/panolist'
           },
           {
@@ -82,7 +92,26 @@ export default function () {
             name: '全景制作',
             path: '/panorama/panomake',
             hidden: false,
+            icon: 'SlackSquareOutlined',
             componentPath: '/panorama/panomake'
+          },
+          {
+            id: 403,
+            name: '测试菜单',
+            path: '/panorama/test',
+            hidden: false,
+            icon: 'SlackSquareOutlined',
+            componentPath: '',
+            children: [
+              {
+                id: 404,
+                name: '全景3-1',
+                path: '/panorama/test/test3',
+                hidden: false,
+                icon: 'SlackSquareOutlined',
+                componentPath: '/panorama/test/test3'
+              }
+            ]
           }
         ]
       }
