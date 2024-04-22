@@ -29,8 +29,8 @@ interface LevelKeysProps {
 const Home: FC<IProps> = () => {
   const [collapsed, setCollapsed] = useState(false)
   const [menus, setMenus] = useState<MenuItem[]>([])
-  const [defaultSelectedKeys, setDefaultSelectedKeys] = useState<string[]>(['100'])
-  const [stateOpenKeys, setStateOpenKeys] = useState<string[]>(['100'])
+  const [defaultSelectedKeys, setDefaultSelectedKeys] = useState<string[]>([''])
+  const [stateOpenKeys, setStateOpenKeys] = useState<string[]>([''])
   const navigate = useNavigate()
   const { pathname } = useLocation()
 

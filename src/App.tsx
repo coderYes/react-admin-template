@@ -30,7 +30,7 @@ function App() {
         }
       }}
     >
-      <Suspense>
+      <Suspense fallback={<div>loading...</div>}>
         <div style={{ height: '100vh', overflow: 'hidden' }}>
           <GetRoutes />
         </div>
