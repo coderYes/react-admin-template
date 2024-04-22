@@ -8,10 +8,7 @@ import { toJS } from 'mobx'
 
 function GetRoutes() {
   useEffect(() => {
-    // mobx会将数据转成proxy对象,需要toJS转成JSON对象
-    console.log(toJS(commonStore.routes))
-
-    baseRouter[0].children = toJS(commonStore.routes)
+    baseRouter[0].children?.push(...toJS(commonStore.routes))
   }, [commonStore.routes])
   const element = useRoutes(baseRouter)
   return <>{element}</>

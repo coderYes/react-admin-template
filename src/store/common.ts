@@ -1,10 +1,10 @@
 import { computed, makeAutoObservable } from 'mobx'
-import { IMenuType } from '@/utils/menu'
+import { IFlatMenuType } from '@/utils/menu'
 import type { RouteObject } from 'react-router-dom'
 
 class CommonStore {
   count = 0
-  menu: IMenuType[] = []
+  menu: IFlatMenuType[] = []
   routes: RouteObject[] = []
   constructor() {
     makeAutoObservable(this, {
@@ -18,7 +18,7 @@ class CommonStore {
   get countAddOne() {
     return this.count + 1
   }
-  setMune(list: IMenuType[]) {
+  setMune(list: IFlatMenuType[]) {
     this.menu = list
   }
   setRoutes(list: RouteObject[]) {
