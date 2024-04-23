@@ -10,13 +10,7 @@ import { Layout, Button, Menu, Tabs } from 'antd'
 const { Header, Sider, Content } = Layout
 
 import { requireAssetsImg } from '@/utils/common'
-import {
-  addRouteToMenu,
-  addIconToMenu,
-  flattenTreeByMenu,
-  findNodeIdsByPath,
-  IFlatMenuType
-} from '@/utils/menu'
+import { addRouteToMenu, addIconToMenu, flattenTreeByMenu, findNodeIdsByPath } from '@/utils/menu'
 
 import rootStore from '@/store'
 import { observer } from 'mobx-react-lite'
@@ -67,12 +61,14 @@ const Home: FC<IProps> = () => {
   const levelKeys = getLevelKeys(menus as LevelKeysProps[])
 
   useEffect(() => {
+    // 获取对应路由
     getRouter().then((menu: any) => {
       if (menu.code !== 200) return
       commonStore.setMune(flattenTreeByMenu(menu.data))
       commonStore.setRoutes(addRouteToMenu(menu.data))
       setMenusData(menu.data)
       setMenus(addIconToMenu([...menu.data]))
+      // 初始选中的菜单项和激活 tab 面板
       const current = commonStore.menu.findIndex((item) => item.path === pathname)
       if (current !== -1) {
         const { key, name, path } = commonStore.menu[current]
