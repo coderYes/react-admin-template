@@ -16,6 +16,7 @@ export interface IMenuType {
 export interface IFlatMenuType {
   key: string
   path: string
+  name: string
 }
 
 /**
@@ -26,8 +27,8 @@ export interface IFlatMenuType {
 export function flattenTreeByMenu(menu: IMenuType[]): IFlatMenuType[] {
   let flatArray: IFlatMenuType[] = []
   menu.forEach((node) => {
-    const { id, path, children } = node
-    flatArray.push({ key: id.toString(), path })
+    const { id, path, name, children } = node
+    flatArray.push({ key: id.toString(), path, name })
     if (children) {
       flatArray = flatArray.concat(flattenTreeByMenu(children))
     }

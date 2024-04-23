@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
 import type { MenuProps } from 'antd'
+import type { IMenuType } from '@/utils/menu'
 import { MainWrapper } from './style'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
-import { Layout, Button, Menu } from 'antd'
+import { Layout, Button, Menu, Tabs } from 'antd'
 const { Header, Sider, Content } = Layout
 
 import { requireAssetsImg } from '@/utils/common'
-import { addRouteToMenu, addIconToMenu, flattenTreeByMenu, findNodeIdsByPath } from '@/utils/menu'
+import {
+  addRouteToMenu,
+  addIconToMenu,
+  flattenTreeByMenu,
+  findNodeIdsByPath,
+  IFlatMenuType
+} from '@/utils/menu'
 
 import rootStore from '@/store'
 import { observer } from 'mobx-react-lite'
@@ -25,10 +32,18 @@ interface LevelKeysProps {
   key?: string
   children?: LevelKeysProps[]
 }
+interface ITabsType {
+  key: string
+  label: string
+  children: string
+}
 
 const Home: FC<IProps> = () => {
   const [collapsed, setCollapsed] = useState(false)
   const [menus, setMenus] = useState<MenuItem[]>([])
+  const [menusData, setMenusData] = useState<IMenuType[]>([])
+  const [tabs, setTabs] = useState<ITabsType[]>([])
+  const [activeKey, setActiveKey] = useState('')
   const [defaultSelectedKeys, setDefaultSelectedKeys] = useState<string[]>([''])
   const [stateOpenKeys, setStateOpenKeys] = useState<string[]>([''])
   const navigate = useNavigate()
@@ -56,15 +71,17 @@ const Home: FC<IProps> = () => {
       if (menu.code !== 200) return
       commonStore.setMune(flattenTreeByMenu(menu.data))
       commonStore.setRoutes(addRouteToMenu(menu.data))
+      setMenusData(menu.data)
       setMenus(addIconToMenu([...menu.data]))
       const current = commonStore.menu.findIndex((item) => item.path === pathname)
-      console.log(current)
-
       if (current !== -1) {
-        const path = commonStore.menu[current].path
+        const { key, name, path } = commonStore.menu[current]
         const keys = findNodeIdsByPath(menu.data, path)
         setDefaultSelectedKeys(keys)
         setStateOpenKeys(keys)
+        const tab = { key, label: name, children: '' }
+        setTabs((prevTabs) => [...prevTabs, tab])
+        setActiveKey(key)
         navigate(path)
       }
     })
@@ -87,7 +104,6 @@ const Home: FC<IProps> = () => {
           .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey])
       )
     } else {
-      // close
       setStateOpenKeys(openKeys)
     }
   }
@@ -95,8 +111,43 @@ const Home: FC<IProps> = () => {
     setDefaultSelectedKeys(e.keyPath)
     const current = commonStore.menu.findIndex((item) => item.key === e.key)
     if (current === -1) return
-    const path = commonStore.menu[current].path
+    const { key, name, path } = commonStore.menu[current]
+    const tabIndex = tabs.findIndex((item) => item.key === key)
+    if (tabIndex === -1) {
+      const tab = { key, label: name, children: '' }
+      setTabs((prevTabs) => [...prevTabs, tab])
+      setActiveKey(key)
+    } else {
+      setActiveKey(key)
+    }
+    const keys = findNodeIdsByPath(menusData, path)
+    setDefaultSelectedKeys(keys)
+    setStateOpenKeys(keys)
     navigate(path)
+  }
+
+  const onTabChange = (keys: string) => {
+    const current = commonStore.menu.findIndex((item) => item.key === keys)
+    if (current === -1) return
+    const { key, path } = commonStore.menu[current]
+    setActiveKey(key)
+    navigate(path)
+  }
+  const onTabEdit = (
+    targetKey: React.MouseEvent | React.KeyboardEvent | string,
+    action: 'add' | 'remove'
+  ) => {
+    if (action === 'remove' && tabs.length > 1) {
+      const index = tabs.findIndex((item) => item.key === targetKey)
+      const activeIndex = index === 0 ? index + 1 : index - 1
+      if (targetKey === activeKey) {
+        const tab = tabs[activeIndex]
+        onTabChange(tab.key)
+        setTabs((prevTabs) => prevTabs.filter((item) => item.key !== targetKey))
+      } else {
+        setTabs((prevTabs) => prevTabs.filter((item) => item.key !== targetKey))
+      }
+    }
   }
 
   return (
@@ -113,7 +164,6 @@ const Home: FC<IProps> = () => {
               defaultSelectedKeys={defaultSelectedKeys}
               openKeys={stateOpenKeys}
               mode="inline"
-              // theme={state.isDark ? 'dark' : 'light'}
               onClick={handleMenuOnClick}
               onOpenChange={onOpenChange}
               items={menus}
@@ -131,6 +181,16 @@ const Home: FC<IProps> = () => {
               <div className="right-menu">
                 <div className="right-menu-item">right</div>
               </div>
+            </div>
+            <div className="tabs">
+              <Tabs
+                activeKey={activeKey}
+                hideAdd
+                type="editable-card"
+                items={tabs}
+                onChange={onTabChange}
+                onEdit={onTabEdit}
+              />
             </div>
           </Header>
           <Content>

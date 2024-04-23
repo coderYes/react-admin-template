@@ -26,6 +26,9 @@ function App() {
             trackHoverBg: '#ffffff',
             dotSize: 4,
             trackBg: '#000000'
+          },
+          Tabs: {
+            cardHeight: 150
           }
         }
       }}

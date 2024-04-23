@@ -13,11 +13,12 @@ export const MainWrapper = styled.div`
       align-items: center;
     }
     .ant-layout-header {
+      height: auto;
+      line-height: normal;
       position: relative;
       padding: 0;
-      height: 84px;
-      line-height: 84px;
       background: #ffffff;
+      overflow: hidden;
       .navbar {
         width: 100%;
         height: 50px;
@@ -50,6 +51,22 @@ export const MainWrapper = styled.div`
             color: #5a5e66;
             vertical-align: text-bottom;
           }
+        }
+      }
+      .tabs {
+        box-sizing: border-box;
+        padding: 2px 2px 0;
+        .ant-tabs {
+          height: 40px;
+        }
+        .ant-tabs-nav {
+          margin: 0;
+        }
+        .ant-tabs-content-holder {
+          display: none;
+        }
+        .ant-tabs-tab-active {
+          border-bottom-color: #f0f0f0;
         }
       }
     }
