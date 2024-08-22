@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import localcache from '@/utils/cache'
+import { getCache } from '@/utils/localCache'
 import { Navigate, useLocation } from 'react-router-dom'
 
 interface IProps {
@@ -9,7 +9,7 @@ interface IProps {
 
 const BeforeRouter: FC<IProps> = ({ children }) => {
   const { pathname } = useLocation()
-  const token = localcache.getCache('token')
+  const token = getCache('token')
   if (!token && pathname !== '/login') {
     return <Navigate to="/login" />
   } else {

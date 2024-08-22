@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import localcache from '@/utils/cache'
+import { setCache } from '@/utils/localCache'
 
 interface IProps {
   children?: ReactNode
@@ -10,7 +10,7 @@ interface IProps {
 const Login: FC<IProps> = () => {
   const navigate = useNavigate()
   const goHome = () => {
-    localcache.setCache('token', '123')
+    setCache('token', '123')
     navigate('/')
   }
   return (

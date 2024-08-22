@@ -12,6 +12,16 @@ export const MainWrapper = styled.div`
       justify-content: center;
       align-items: center;
     }
+    .custom-scroll-bar {
+      width: 100%;
+      height: calc(100vh - 50px);
+    }
+    .ant-menu-root {
+      /* height: calc(100vh - 50px);
+      overflow-y: auto;
+      box-sizing: border-box;
+      padding-bottom: 20px; */
+    }
     .ant-layout-header {
       height: auto;
       line-height: normal;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import type { FC, ReactNode } from 'react'
 import type { MenuProps } from 'antd'
 import type { IMenuType } from '@/utils/menu'
@@ -154,17 +154,14 @@ const Home: FC<IProps> = () => {
             <img className="w-[32px] h-[32px]" src={requireAssetsImg('image/react.svg')} alt="" />
             {collapsed ? <></> : <div className="ml-3">admin模板</div>}
           </div>
-          {menus.length && (
-            <Menu
-              style={{ height: '100%' }}
-              defaultSelectedKeys={defaultSelectedKeys}
-              openKeys={stateOpenKeys}
-              mode="inline"
-              onClick={handleMenuOnClick}
-              onOpenChange={onOpenChange}
-              items={menus}
-            />
-          )}
+          <Menu
+            defaultSelectedKeys={defaultSelectedKeys}
+            openKeys={stateOpenKeys}
+            mode="inline"
+            onClick={handleMenuOnClick}
+            onOpenChange={onOpenChange}
+            items={menus}
+          />
         </Sider>
         <Layout>
           <Header>

@@ -1,10 +1,8 @@
-import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import axios from 'axios'
 import { getToken } from '@/utils/localCache'
 import { notification, message, Modal } from 'antd'
 import errorCode from '@/utils/errorCode'
-import rootStore from '@/store'
 const { confirm } = Modal
-const { usersStore } = rootStore
 
 type ErrorCodeKey = keyof typeof errorCode
 
@@ -14,13 +12,14 @@ export const isRelogin = { show: false }
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
 const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  // baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: 'http://localhost:3000',
   timeout: 10000
 })
 
 // request拦截器
 service.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config) => {
     // 是否需要设置 token
     const isToken = (config.headers || {}).isToken === false
 
@@ -29,7 +28,7 @@ service.interceptors.request.use(
     }
     return config
   },
-  (error: AxiosError) => {
+  (error) => {
     console.log(error)
     Promise.reject(error)
   }
@@ -37,7 +36,7 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-  (res: AxiosResponse) => {
+  (res) => {
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200
     const codeStr = `${code}`
@@ -55,9 +54,11 @@ service.interceptors.response.use(
           content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
           onOk() {
             isRelogin.show = false
-            usersStore.logout().then(() => {
-              location.href = '/login'
-            })
+            // useUserStore()
+            //   .logOut()
+            //   .then(() => {
+            //     location.href = '/index'
+            //   })
           },
           onCancel() {
             isRelogin.show = false
@@ -78,17 +79,17 @@ service.interceptors.response.use(
       return Promise.resolve(res.data)
     }
   },
-  (error: AxiosError) => {
+  (error) => {
     console.log('err' + error)
-    let { message: errMsg } = error
-    if (errMsg == 'Network Error') {
-      errMsg = '后端接口连接异常'
-    } else if (errMsg.includes('timeout')) {
-      errMsg = '接口请求超时'
-    } else if (errMsg.includes('Request failed with status code')) {
-      errMsg = '接口' + errMsg.substr(errMsg.length - 3) + '异常'
+    let { message } = error
+    if (message == 'Network Error') {
+      message = '后端接口连接异常'
+    } else if (message.includes('timeout')) {
+      message = '接口请求超时'
+    } else if (message.includes('Request failed with status code')) {
+      message = '接口' + message.substr(message.length - 3) + '异常'
     }
-    message.error(errMsg, 5 * 1000)
+    message.error(message, 5 * 1000)
     return Promise.reject(error)
   }
 )
