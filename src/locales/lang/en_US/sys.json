@@ -1,0 +1,23 @@
+{
+  "sys": {
+    "tab": {
+      "fullscreen": "FullScreen",
+      "refresh": "Refresh",
+      "close": "Close",
+      "closeOthers": "Close Others",
+      "closeAll": "Close All",
+      "closeLeft": "Close Left",
+      "closeRight": "Close Right"
+    },
+    "setting": {
+      "setting": "Setting",
+      "themeMode": "Theme Mode",
+      "layout": "Layout",
+      "themeColor": "Theme Color",
+      "page": "Page",
+      "breadCrumb": "BreadCrumb",
+      "tabs": "Tabs",
+      "darkSidebar": "Dark Sidebar"
+    }
+  }
+}

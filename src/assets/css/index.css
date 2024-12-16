@@ -1,0 +1,8 @@
+/* global style */
+@import './global.css';
+/* customize reset style */
+@import './normalize.css';
+/* Add the Tailwind directives to your CSS */
+@import './tailwind.css';
+/* simplebar */
+@import 'simplebar-react/dist/simplebar.min.css';

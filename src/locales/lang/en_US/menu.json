@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "dashboard": {
+      "workbench": "Workbench"
+    },
+    "system": {
+      "system": "System",
+      "user": "User",
+      "role": "Role",
+      "test": "Test",
+      "test2": "Params Page"
+    }
+  }
+}

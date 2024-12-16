@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "dashboard": {
+      "workbench": "工作台"
+    },
+    "system": {
+      "system": "系统管理",
+      "user": "用户管理",
+      "role": "角色管理",
+      "test": "测试页面",
+      "test2": "Params传参"
+    }
+  }
+}
