@@ -57,7 +57,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
   if (screenMap.md) {
     multiTabsStyle.right = '0px'
     multiTabsStyle.left = 'auto'
-    multiTabsStyle.width = `calc(100% - ${
+    multiTabsStyle.paddingLeft = `${
       themeLayout === ThemeLayout.Vertical ? NAV_WIDTH : NAV_COLLAPSED_WIDTH
     }px`
   }
