@@ -1,10 +1,12 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { CSSProperties, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ThemeLayout, ThemeMode } from '@/types/enum'
 import { useScroll } from 'motion/react'
 import { CircleLoading } from '@/components/loading'
 import { observer } from 'mobx-react-lite'
-import { useThemeToken } from '@/theme/hooks'
+import { useResponsive } from '@/theme/hooks'
 import { useFullscreen, useToggle } from 'react-use'
+import { Layout } from 'antd'
+import { NAV_COLLAPSED_WIDTH, NAV_WIDTH } from './config'
 import rootStore from '@/store'
 import Header from './header'
 import styled from 'styled-components'
@@ -17,13 +19,17 @@ const AdminLayout = () => {
   const {
     themeSetting: { themeLayout, themeMode }
   } = themeStore
-  const { colorBgElevated, colorTextBase } = useThemeToken()
+  const { screenMap } = useResponsive()
 
   const tabContentRef = useRef(null)
   const [fullScreen, toggleFullScreen] = useToggle(false)
   useFullscreen(tabContentRef, fullScreen, {
     onClose: () => toggleFullScreen(false)
   })
+
+  const layoutClassName = useMemo(() => {
+    return 'flex h-screen overflow-hidden flex-row'
+  }, [themeLayout])
 
   const mainEl = useRef(null)
   const { scrollY } = useScroll({ container: mainEl })
@@ -42,63 +48,79 @@ const AdminLayout = () => {
     onOffSetTop()
   }, [onOffSetTop])
 
+  const secondLayoutStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    paddingLeft: screenMap.md
+      ? themeLayout === ThemeLayout.Mini
+        ? NAV_COLLAPSED_WIDTH
+        : NAV_WIDTH
+      : 0
+  }
+
   return (
     <AdminLayoutWrapper $themeMode={themeMode}>
       <ProgressBar />
-      <div
-        ref={tabContentRef}
-        className="flex h-screen overflow-hidden"
-        style={{
-          color: colorTextBase,
-          background: colorBgElevated,
-          transition:
-            'color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, background 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-        }}
-      >
+      <Layout className={layoutClassName}>
         <Suspense fallback={<CircleLoading />}>
-          <Header
-            offsetTop={themeLayout === ThemeLayout.Vertical ? offsetTop : undefined}
-            onToggleFullscreen={() => toggleFullScreen()}
-          />
-          <Nav />
-          <Main ref={mainEl} offsetTop={offsetTop} />
+          <Layout style={secondLayoutStyle}>
+            <Header
+              offsetTop={themeLayout === ThemeLayout.Vertical ? offsetTop : undefined}
+              onToggleFullscreen={() => toggleFullScreen()}
+            />
+            <Nav />
+            <Main ref={mainEl} offsetTop={offsetTop} />
+          </Layout>
         </Suspense>
-      </div>
+      </Layout>
     </AdminLayoutWrapper>
   )
 }
-
+const scrollbarStyles = {
+  dark: {
+    track: '#2c2c2c',
+    thumb: '#6b6b6b',
+    thumbHover: '#939393'
+  },
+  light: {
+    track: '#FAFAFA',
+    thumb: '#C1C1C1',
+    thumbHover: '#7D7D7D'
+  }
+}
 const AdminLayoutWrapper = styled.div<{ $themeMode?: ThemeMode }>`
-  /* 设置滚动条的整体样式 */
   ::-webkit-scrollbar {
-    width: 8px; /* 设置滚动条宽度 */
+    width: 8px;
+    top: 32px;
   }
 
-  /* 设置滚动条轨道的样式 */
   ::-webkit-scrollbar-track {
     border-radius: 8px;
-    background: ${(props) => (props.$themeMode === ThemeMode.Dark ? '#2c2c2c' : '#FAFAFA')};
+    background: ${({ $themeMode }) =>
+      $themeMode === ThemeMode.Dark ? scrollbarStyles.dark.track : scrollbarStyles.light.track};
   }
 
-  /* 设置滚动条滑块的样式 */
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background: ${(props) => (props.$themeMode === ThemeMode.Dark ? '#6b6b6b' : '#C1C1C1')};
+    background: ${({ $themeMode }) =>
+      $themeMode === ThemeMode.Dark ? scrollbarStyles.dark.thumb : scrollbarStyles.light.thumb};
   }
 
-  /* 设置菜单滚动条样式 */
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ $themeMode }) =>
+      $themeMode === ThemeMode.Dark
+        ? scrollbarStyles.dark.thumbHover
+        : scrollbarStyles.light.thumbHover};
+  }
+
   .simplebar-scrollbar::before {
-    background: ${(props) => (props.$themeMode === ThemeMode.Dark ? '#6b6b6b' : '#C1C1C1')};
+    background: ${({ $themeMode }) =>
+      $themeMode === ThemeMode.Dark ? scrollbarStyles.dark.thumb : scrollbarStyles.light.thumb};
   }
 
-  /* 设置菜单滚动条透明度统一 */
   .simplebar-scrollbar.simplebar-visible:before {
     opacity: 1;
-  }
-
-  /* 设置鼠标悬停在滚动条上的样式 */
-  ::-webkit-scrollbar-thumb:hover {
-    background: ${(props) => (props.$themeMode === ThemeMode.Dark ? '#939393' : '##7D7D7D')};
   }
 `
 

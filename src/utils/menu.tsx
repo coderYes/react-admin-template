@@ -2,6 +2,7 @@ import { LazyLoad, SuspenseHOC } from './LazyLoad'
 import type { RouteObject } from 'react-router-dom'
 import type { MenuType, MneuItemsType } from '@/types/menus'
 import { Iconify } from '@/components/icon'
+import { createRef } from 'react'
 
 /**
  * 组装路由
@@ -29,6 +30,7 @@ export function flattenTree(menus: MenuType[], ignoreType: number = 0): MenuType
   let result: MenuType[] = []
   menus.forEach((m) => {
     if (m.type !== ignoreType) {
+      m.nodeRef = createRef()
       result.push(m)
     }
 

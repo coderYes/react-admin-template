@@ -1,5 +1,5 @@
 import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Dropdown, Tabs, type TabsProps, type MenuProps } from 'antd'
+import { Dropdown, Tabs, type MenuProps } from 'antd'
 import { useCurrentRouteMeta, useRouter } from '@/router/hooks'
 import { useResponsive, useThemeToken } from '@/theme/hooks'
 import { ThemeLayout, MultiTabOperation } from '@/types/enum'
@@ -46,12 +46,13 @@ export default function MultiTabs({ offsetTop = false }: Props) {
   const { screenMap } = useResponsive()
   const multiTabsStyle: CSSProperties = {
     position: 'fixed',
-    top: offsetTop ? OFFSET_HEADER_HEIGHT - 2 : HEADER_HEIGHT,
+    top: offsetTop ? OFFSET_HEADER_HEIGHT : HEADER_HEIGHT,
     left: 0,
     height: MULTI_TABS_HEIGHT,
     backgroundColor: Color(themeToken.colorBgElevated).alpha(1).toString(),
     borderBottom: `1px dashed ${Color(themeToken.colorBorder).alpha(0.6).toString()}`,
-    transition: 'top 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    width: '100%'
   }
   if (screenMap.md) {
     multiTabsStyle.right = '0px'
@@ -59,8 +60,6 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     multiTabsStyle.width = `calc(100% - ${
       themeLayout === ThemeLayout.Vertical ? NAV_WIDTH : NAV_COLLAPSED_WIDTH
     }px`
-  } else {
-    multiTabsStyle.width = '100vw'
   }
 
   // current route meta
@@ -321,7 +320,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     }))
   }, [tabs, renderTabLabel])
 
-  const renderTabBar: TabsProps['renderTabBar'] = () => {
+  const renderTabBar = () => {
     return (
       <div style={multiTabsStyle} className="z-20 w-full">
         <div className="flex w-full">
@@ -342,23 +341,6 @@ export default function MultiTabs({ offsetTop = false }: Props) {
               </div>
             ))}
           </ScrollTabs>
-          {/* <div className="hide-scrollbar flex w-full px-2">
-            {tabs.map((tab, index) => (
-              <div
-                id={`tab-${index}`}
-                className="flex-shrink-0"
-                key={tab.key}
-                onClick={() => handleTabClick(tab)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleTabClick(tab)
-                  }
-                }}
-              >
-                <div className="w-auto">{renderTabLabel(tab)}</div>
-              </div>
-            ))}
-          </div> */}
         </div>
       </div>
     )
@@ -382,6 +364,7 @@ const TabWrapper = styled.div`
   .anticon {
     margin: 0px !important;
   }
+
   .ant-tabs {
     height: 100%;
     .ant-tabs-content {
@@ -395,15 +378,14 @@ const TabWrapper = styled.div`
     }
   }
 
-  /* 隐藏滚动条 */
   .hide-scrollbar {
     overflow: scroll;
     flex-shrink: 0;
-    scrollbar-width: none; /* 隐藏滚动条 Firefox */
-    -ms-overflow-style: none; /* 隐藏滚动条 IE/Edge */
-  }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none; /* 隐藏滚动条 Chrome/Safari/Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `

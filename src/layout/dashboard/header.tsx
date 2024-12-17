@@ -1,7 +1,6 @@
 import { CSSProperties, useState } from 'react'
-import { useResponsive, useThemeToken } from '@/theme/hooks'
-import { NAV_COLLAPSED_WIDTH, NAV_WIDTH, HEADER_HEIGHT, OFFSET_HEADER_HEIGHT } from './config'
-import { ThemeLayout } from '@/types/enum'
+import { useThemeToken } from '@/theme/hooks'
+import { HEADER_HEIGHT, OFFSET_HEADER_HEIGHT } from './config'
 import { observer } from 'mobx-react-lite'
 import { Drawer } from 'antd'
 import { IconButton, Iconify, SvgIcon } from '@/components/icon'
@@ -23,29 +22,18 @@ const Header = ({ offsetTop = false, onToggleFullscreen }: Props) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { themeStore } = rootStore
   const {
-    themeSetting: { themeLayout, breadCrumb }
+    themeSetting: { breadCrumb }
   } = themeStore
   const { colorBgElevated } = useThemeToken()
-  const { screenMap } = useResponsive()
 
   const headerStyle: CSSProperties = {
-    position: 'fixed',
-    backgroundColor: Color(colorBgElevated).alpha(1).toString()
-  }
-
-  if (screenMap.md) {
-    headerStyle.right = '0px'
-    headerStyle.left = 'auto'
-    headerStyle.width = `calc(100% - ${
-      themeLayout === ThemeLayout.Vertical ? NAV_WIDTH : NAV_COLLAPSED_WIDTH
-    }px)`
-  } else {
-    headerStyle.width = '100vw'
+    backgroundColor: Color(colorBgElevated).alpha(1).toString(),
+    width: '100%'
   }
 
   return (
     <>
-      <header className="z-20 w-full transition-all duration-300" style={headerStyle}>
+      <header className="sticky top-0 right-0 left-auto" style={headerStyle}>
         <div
           className="flex flex-grow items-center justify-between px-4 text-[#637381] backdrop-blur xl:px-6 2xl:px-10"
           style={{

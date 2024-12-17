@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { TabItemType } from '../multiTabs'
 
 type Props = {
@@ -11,9 +11,9 @@ export default function ScrollTabs({ children, activeTabRoutePath, tabs }: Props
 
   useEffect(() => {
     function handleMouseWheel(event: WheelEvent) {
-      event.preventDefault()
+      // event.preventDefault()
       if (scrollContainer.current) {
-        scrollContainer.current.scrollLeft += event.deltaY / 4
+        scrollContainer.current.scrollLeft += event.deltaY / 3
       }
     }
     if (scrollContainer.current) {

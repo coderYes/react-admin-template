@@ -11,6 +11,7 @@ import Color from 'color'
 import rootStore from '@/store'
 import NavLogo from './nva-logo'
 import Scrollbar from '@/components/scrollbar'
+import styled from 'styled-components'
 const { Sider } = Layout
 
 type Props = {
@@ -58,7 +59,6 @@ const NavVertical = (props: Props) => {
   }
 
   const handleOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    if (collapsed) return
     setOpenKeys(keys)
   }
 
@@ -69,32 +69,40 @@ const NavVertical = (props: Props) => {
     return darkSidebar ? 'dark' : 'light'
   }, [themeMode, darkSidebar])
 
+  const SiderWrapper = styled.div`
+    .ant-menu-item,
+    .ant-menu-submenu > .ant-menu-submenu-title {
+      padding-inline: calc(50% - 16px);
+    }
+  `
   return (
-    <Sider
-      trigger={null}
-      collapsible
-      collapsed={collapsed}
-      width={NAV_WIDTH}
-      theme={sidebarTheme}
-      style={{
-        height: '100vh',
-        borderRight: `1px dashed ${Color(colorBorder).alpha(0.6).toString()}`
-      }}
-    >
-      <NavLogo collapsed={collapsed} onToggle={handleToggleCollapsed} />
-      <Scrollbar>
-        <Menu
-          mode="inline"
-          items={items}
-          theme={sidebarTheme}
-          selectedKeys={selectedKeys}
-          {...(!collapsed && { openKeys })}
-          onOpenChange={handleOpenChange}
-          className="!border-none"
-          onClick={onClick}
-        />
-      </Scrollbar>
-    </Sider>
+    <SiderWrapper>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        width={NAV_WIDTH}
+        theme={sidebarTheme}
+        className="!fixed left-0 top-0 h-screen"
+        style={{
+          borderRight: `1px dashed ${Color(colorBorder).alpha(0.6).toString()}`
+        }}
+      >
+        <NavLogo collapsed={collapsed} onToggle={handleToggleCollapsed} />
+        <Scrollbar>
+          <Menu
+            mode="inline"
+            items={items}
+            theme={sidebarTheme}
+            selectedKeys={selectedKeys}
+            openKeys={openKeys}
+            onOpenChange={handleOpenChange}
+            className="!border-none"
+            onClick={onClick}
+          />
+        </Scrollbar>
+      </Sider>
+    </SiderWrapper>
   )
 }
 export default observer(NavVertical)

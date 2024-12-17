@@ -12,7 +12,7 @@ function Logo({ size = 50 }: Props) {
 
   return (
     <NavLink to="/">
-      <Iconify icon="line-md:sunny-outline-twotone-loop" color={colorPrimary} size={size} />
+      <Iconify icon="ic:outline-catching-pokemon" color={colorPrimary} size={size} />
     </NavLink>
   )
 }

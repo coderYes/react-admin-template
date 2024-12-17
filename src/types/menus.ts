@@ -13,6 +13,7 @@ export interface MenuType {
   permission?: string
   children?: MenuType[]
   outlet?: any
+  nodeRef?: any
 }
 
 export interface MneuItemsType {
