@@ -1,6 +1,6 @@
 import { ThemeConfig } from 'antd'
 
-import { ThemeColorPresets } from '@/types/enum'
+import { ThemeColorPresets, ThemePageTransition } from '@/types/enum'
 /**
  * Antd theme editor: https://ant.design/theme-editor-cn
  */
@@ -62,4 +62,18 @@ const themeModeToken: Record<'dark' | 'light', ThemeConfig> = {
   light: {}
 }
 
-export { customThemeTokenConfig, customComponentConfig, colorPrimarys, themeModeToken }
+const pageTransition: {
+  [k in ThemePageTransition]: string
+} = {
+  fadeIn: 'fade-in',
+  fadeDown: 'fade-down',
+  fadeRight: 'fade-right'
+}
+
+export {
+  customThemeTokenConfig,
+  customComponentConfig,
+  colorPrimarys,
+  themeModeToken,
+  pageTransition
+}

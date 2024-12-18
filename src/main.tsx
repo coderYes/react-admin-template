@@ -5,7 +5,6 @@ import '@/assets/css/index.css'
 import 'virtual:svg-icons-register'
 // i18n
 import './locales/i18n'
-import 'default-passive-events'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 

@@ -34,3 +34,9 @@ export enum MultiTabOperation {
   CLOSELEFT = 'closeLeft',
   CLOSERIGHT = 'closeRight'
 }
+
+export enum ThemePageTransition {
+  FadeIn = 'fadeIn',
+  FadeDown = 'fadeDown',
+  FadeRight = 'fadeRight'
+}

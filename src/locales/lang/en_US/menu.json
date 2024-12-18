@@ -9,6 +9,10 @@
       "role": "Role",
       "test": "Test",
       "test2": "Params Page"
+    },
+    "user": {
+      "user": "User",
+      "profile": "Profile"
     }
   }
 }

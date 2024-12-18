@@ -1,10 +1,10 @@
 import { IconButton, Iconify, SvgIcon } from '@/components/icon'
 import { useThemeToken } from '@/theme/hooks'
-import { Card, Drawer, Switch } from 'antd'
+import { Card, Drawer, Select, Switch } from 'antd'
 import { CSSProperties, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemeColorPresets, ThemeLayout, ThemeMode } from '@/types/enum'
-import { colorPrimarys } from '@/theme/antd/theme'
+import { colorPrimarys, pageTransition } from '@/theme/antd/theme'
 import Color from 'color'
 import rootStore from '@/store'
 
@@ -18,7 +18,8 @@ export default function SettingButton() {
       themeLayout,
       breadCrumb,
       multiTab,
-      darkSidebar
+      darkSidebar,
+      pageTransAnimation
     }
   } = themeStore
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -62,6 +63,13 @@ export default function SettingButton() {
       darkSidebar: checked
     })
   }
+
+  const setPageTransition = (value: string) => {
+    themeStore.setSettings({
+      pageTransAnimation: value
+    })
+  }
+
   const layoutBackground = (layout: ThemeLayout) =>
     themeLayout === layout
       ? `linear-gradient(135deg, ${colorBgBase} 0%, ${colorPrimary} 100%)`
@@ -273,6 +281,22 @@ export default function SettingButton() {
                   size="small"
                   checked={darkSidebar}
                   onChange={(checked) => setDarkSidebar(checked)}
+                />
+              </div>
+              <div
+                className="flex items-center justify-between"
+                style={{ color: colorTextTertiary }}
+              >
+                <div>{t('sys.setting.transition.label')}</div>
+                <Select
+                  defaultValue={pageTransAnimation}
+                  style={{ width: 120 }}
+                  size="small"
+                  options={Object.entries(pageTransition).map(([k, v]) => ({
+                    label: t(`sys.setting.transition.${k}`),
+                    value: k
+                  }))}
+                  onChange={(value) => setPageTransition(value)}
                 />
               </div>
             </div>

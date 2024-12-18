@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx'
-import { clearCache } from '@/utils/localCache'
+import { deleteCache } from '@/utils/localCache'
 import { MenuType } from '@/types/menus'
+import { UserInfoType } from '@/types/entity'
 
 class UserStore {
-  userInfo = {}
+  userInfo: Partial<UserInfoType> = {}
   permissions: {
     menuPermissionList: string[]
     btnPermissionList: string[]
@@ -29,7 +30,8 @@ class UserStore {
 
   logout(): Promise<void> {
     return new Promise((resolve) => {
-      clearCache()
+      deleteCache('token')
+      deleteCache('userInfo')
       resolve()
     })
   }

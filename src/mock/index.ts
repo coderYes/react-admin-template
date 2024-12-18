@@ -78,91 +78,33 @@ export default function () {
                 icon: 'material-symbols:apps',
                 order: 3,
                 permission: 'admin:system:test'
-              },
-              {
-                id: 6,
-                parentId: 1,
-                name: 'Params传参',
-                path: '/admin/system/test/:id',
-                type: 1,
-                hidden: 1,
-                status: 1,
-                icon: 'material-symbols:apps',
-                order: 3,
-                permission: 'admin:system:test'
-              },
-              {
-                id: 7,
-                parentId: 1,
-                name: '测试页面1',
-                path: '/admin/system/test1',
-                type: 1,
-                hidden: 0,
-                status: 1,
-                icon: 'material-symbols:apps',
-                order: 4,
-                permission: 'admin:system:test1'
-              },
-              {
-                id: 8,
-                parentId: 1,
-                name: '测试页面1',
-                path: '/admin/system/test2',
-                type: 1,
-                hidden: 0,
-                status: 1,
-                icon: 'material-symbols:apps',
-                order: 5,
-                permission: 'admin:system:test2'
-              },
+              }
+            ]
+          },
+          {
+            id: 8,
+            parentId: 0,
+            name: '用户',
+            path: '/admin/user',
+            type: 0,
+            hidden: 0,
+            status: 1,
+            icon: 'material-symbols:apps',
+            order: 2,
+            permission: null,
+            children: [
               {
                 id: 9,
                 parentId: 1,
-                name: '测试页面1',
-                path: '/admin/system/test3',
+                name: '个人资料',
+                path: '/admin/user/profile',
                 type: 1,
                 hidden: 0,
                 status: 1,
                 icon: 'material-symbols:apps',
-                order: 6,
-                permission: 'admin:system:test3'
-              },
-              {
-                id: 10,
-                parentId: 1,
-                name: '测试页面1',
-                path: '/admin/system/test4',
-                type: 1,
-                hidden: 0,
-                status: 1,
-                icon: 'material-symbols:apps',
-                order: 7,
-                permission: 'admin:system:test4'
-              },
-              {
-                id: 11,
-                parentId: 1,
-                name: '测试页面1',
-                path: '/admin/system/test5',
-                type: 1,
-                hidden: 0,
-                status: 1,
-                icon: 'material-symbols:apps',
-                order: 8,
-                permission: 'admin:system:test5'
-              },
-              {
-                id: 12,
-                parentId: 1,
-                name: '测试页面1',
-                path: '/admin/system/test6',
-                type: 1,
-                hidden: 0,
-                status: 1,
-                icon: 'material-symbols:apps',
-                order: 9,
-                permission: 'admin:system:test6'
-              },
+                order: 3,
+                permission: 'admin:user:profile'
+              }
             ]
           }
         ]

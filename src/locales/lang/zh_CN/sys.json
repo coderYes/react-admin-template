@@ -17,7 +17,21 @@
       "page": "页面配置",
       "breadCrumb": "面包屑",
       "tabs": "标签页",
-      "darkSidebar": "深色侧边栏"
+      "darkSidebar": "深色侧边栏",
+      "transition": {
+        "label": "页面切换",
+        "fadeIn": "淡入淡出",
+        "fadeDown": "底部消退",
+        "fadeRight": "向右淡出"
+      }
+    },
+    "account": {
+      "user": {
+        "profile": "个人资料"
+      }
+    },
+    "login": {
+      "logout": "退出登录"
     }
   }
 }

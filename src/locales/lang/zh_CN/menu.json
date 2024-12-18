@@ -9,6 +9,10 @@
       "role": "角色管理",
       "test": "测试页面",
       "test2": "Params传参"
+    },
+    "user": {
+      "user": "用户",
+      "profile": "个人资料"
     }
   }
 }

@@ -5,6 +5,7 @@ import { useThemeToken } from '@/theme/hooks'
 import { MULTI_TABS_HEIGHT } from './config'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useFlattenedRoutes } from '@/router/hooks'
+import { pageTransition } from '@/theme/antd/theme'
 import rootStore from '@/store'
 import MultiTabs from './multiTabs'
 import './style.css'
@@ -15,7 +16,7 @@ type Props = {
 const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
   const { themeStore } = rootStore
   const {
-    themeSetting: { themeStretch, multiTab }
+    themeSetting: { themeStretch, multiTab, pageTransAnimation }
   } = themeStore
   const { colorBgElevated } = useThemeToken()
 
@@ -44,14 +45,10 @@ const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
                   key={location.pathname}
                   nodeRef={nodeRef}
                   timeout={300}
-                  classNames="page"
+                  classNames={pageTransition[pageTransAnimation]}
                   unmountOnExit
                 >
-                  {() => (
-                    <div ref={nodeRef} className="page">
-                      {currentOutlet}
-                    </div>
-                  )}
+                  {() => <div ref={nodeRef}>{currentOutlet}</div>}
                 </CSSTransition>
               </SwitchTransition>
             </>
@@ -61,14 +58,10 @@ const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
                 key={location.pathname}
                 nodeRef={nodeRef}
                 timeout={300}
-                classNames="page"
+                classNames={pageTransition[pageTransAnimation]}
                 unmountOnExit
               >
-                {() => (
-                  <div ref={nodeRef} className="page">
-                    {currentOutlet}
-                  </div>
-                )}
+                {() => <div ref={nodeRef}>{currentOutlet}</div>}
               </CSSTransition>
             </SwitchTransition>
           )}

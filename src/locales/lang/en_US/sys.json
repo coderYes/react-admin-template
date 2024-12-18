@@ -17,7 +17,21 @@
       "page": "Page",
       "breadCrumb": "BreadCrumb",
       "tabs": "Tabs",
-      "darkSidebar": "Dark Sidebar"
+      "darkSidebar": "Dark Sidebar",
+      "transition": {
+        "label": "Page transition animation",
+        "fadeIn": "fade-in",
+        "fadeDown": "fade-down",
+        "fadeRight": "fade-right"
+      }
+    },
+    "account": {
+      "user": {
+        "profile": "Profile"
+      }
+    },
+    "login": {
+      "logout": "Logout"
     }
   }
 }

@@ -11,6 +11,7 @@ import BreadCrumb from './common/bread-crumb'
 import NavVertical from './nav/nav-vertical'
 import LocalePicker from './common/locale-picker'
 import SettingButton from './common/setting-button'
+import AccountDropdown from './common/account-dropdown'
 
 export type Locale = keyof typeof LocalEnum
 
@@ -59,7 +60,7 @@ const Header = ({ offsetTop = false, onToggleFullscreen }: Props) => {
               <Iconify icon="solar:full-screen-bold-duotone" size={24} />
             </IconButton>
             <SettingButton />
-            {/* <AccountDropdown /> */}
+            <AccountDropdown />
           </div>
         </div>
       </header>

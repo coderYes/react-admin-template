@@ -1,15 +1,16 @@
-import { ThemeColorPresets, ThemeLayout, ThemeMode } from '@/types/enum'
+import { ThemeColorPresets, ThemeLayout, ThemeMode, ThemePageTransition } from '@/types/enum'
 import { makeAutoObservable } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
 
 type themeSettingType = {
-  themeMode?: ThemeMode
-  themeColorPresets?: ThemeColorPresets
-  themeLayout?: ThemeLayout
-  breadCrumb?: boolean
-  darkSidebar?: boolean
-  themeStretch?: boolean
-  multiTab?: boolean
+  themeMode: ThemeMode
+  themeColorPresets: ThemeColorPresets
+  themeLayout: ThemeLayout
+  breadCrumb: boolean
+  darkSidebar: boolean
+  themeStretch: boolean
+  multiTab: boolean
+  pageTransAnimation: ThemePageTransition
 }
 
 class ThemeStore {
@@ -20,7 +21,8 @@ class ThemeStore {
     breadCrumb: true,
     darkSidebar: false,
     themeStretch: false,
-    multiTab: true
+    multiTab: true,
+    pageTransAnimation: ThemePageTransition.FadeIn
   }
 
   constructor() {
@@ -33,7 +35,7 @@ class ThemeStore {
     })
   }
 
-  setSettings(settings: themeSettingType) {
+  setSettings(settings: any) {
     this.themeSetting = { ...this.themeSetting, ...settings }
   }
 }
