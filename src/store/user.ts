@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx'
 import { deleteCache } from '@/utils/localCache'
 import { MenuType } from '@/types/menus'
 import { UserInfoType } from '@/types/entity'
+import { makePersistable } from 'mobx-persist-store'
 
 class UserStore {
   userInfo: Partial<UserInfoType> = {}
@@ -15,6 +16,16 @@ class UserStore {
   menuList: MenuType[] = []
   constructor() {
     makeAutoObservable(this)
+
+    makePersistable(this, {
+      name: 'userStore',
+      properties: ['userInfo', 'permissions', 'menuList'],
+      storage: window.localStorage
+    })
+  }
+
+  setUserInfo(store: UserInfoType) {
+    this.userInfo = store
   }
 
   setPermission(permissions: { menuPermissionList: string[]; btnPermissionList: string[] }) {

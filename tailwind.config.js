@@ -21,5 +21,13 @@ export default {
       }
     }
   },
-  plugins: []
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.mbe-0': {
+          'margin-block-end': '0 !important'
+        }
+      })
+    }
+  ]
 }

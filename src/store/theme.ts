@@ -20,7 +20,7 @@ class ThemeStore {
     themeLayout: ThemeLayout.Vertical,
     breadCrumb: true,
     darkSidebar: false,
-    themeStretch: false,
+    themeStretch: true,
     multiTab: true,
     pageTransAnimation: ThemePageTransition.FadeIn
   }

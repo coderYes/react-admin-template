@@ -62,18 +62,20 @@ const AdminLayout = () => {
   return (
     <AdminLayoutWrapper $themeMode={themeMode}>
       <ProgressBar />
-      <Layout className={layoutClassName}>
-        <Suspense fallback={<CircleLoading />}>
-          <Layout style={secondLayoutStyle}>
-            <Header
-              offsetTop={themeLayout === ThemeLayout.Vertical ? offsetTop : undefined}
-              onToggleFullscreen={() => toggleFullScreen()}
-            />
-            <Nav />
-            <Main ref={mainEl} offsetTop={offsetTop} />
-          </Layout>
-        </Suspense>
-      </Layout>
+      <div ref={tabContentRef}>
+        <Layout className={layoutClassName}>
+          <Suspense fallback={<CircleLoading />}>
+            <Layout style={secondLayoutStyle}>
+              <Header
+                offsetTop={themeLayout === ThemeLayout.Vertical ? offsetTop : undefined}
+                onToggleFullscreen={() => toggleFullScreen()}
+              />
+              <Nav />
+              <Main ref={mainEl} offsetTop={offsetTop} />
+            </Layout>
+          </Suspense>
+        </Layout>
+      </div>
     </AdminLayoutWrapper>
   )
 }

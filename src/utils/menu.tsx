@@ -28,10 +28,11 @@ export function assembleRouter(menus: MenuType[]): RouteObject[] {
 
 export function flattenTree(menus: MenuType[], ignoreType: number = 0): MenuType[] {
   let result: MenuType[] = []
+
   menus.forEach((m) => {
     if (m.type !== ignoreType) {
-      m.nodeRef = createRef()
-      result.push(m)
+      const newNode = { ...m, nodeRef: createRef() }
+      result.push(newNode)
     }
 
     if (m.children && m.children.length > 0) {
