@@ -1,9 +1,11 @@
+import '@/utils/highlight'
 import { useThemeToken } from '@/theme/hooks'
 import { Card, Typography } from 'antd'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Editor from '@/components/editor'
 import parse from 'html-react-parser'
+
 
 function EditorPage() {
   const { colorPrimary } = useThemeToken()
@@ -15,7 +17,6 @@ function EditorPage() {
   const [quillFull, setQuillFull] = useState(
     '<p><strong>Lorem, ipsum dolor sit amet consectetur adipisicing elit</strong></p><p><em>Lorem, ipsum dolor sit amet consectetur adipisicing elit</em></p><p><u>Lorem, ipsum dolor sit amet consectetur adipisicing elit</u></p><p><s>Lorem, ipsum dolor sit amet consectetur adipisicing elit</s></p><p><span style="color: rgb(230, 0, 0);">Lorem, ipsum dolor sit amet consectetur adipisicing elit</span></p><p><span style="background-color: rgb(255, 255, 0);">Lorem, ipsum dolor sit amet consectetur adipisicing elit</span></p>'
   )
-  const [value, setValue] = useState('')
 
   return (
     <>
