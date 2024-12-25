@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import type { RouteObject } from 'react-router-dom'
 import { assembleRouter, flattenRouterAndPermission } from '@/utils/menu'
 import baseRouter from './BaseRouter'
+import errorRouter from './ErrorRouter'
 import getRouer from '@/mock'
 import rootStore from '@/store'
 
@@ -26,7 +27,7 @@ function BrowserRouter() {
         userStore.setPermission(permission)
       }
 
-      const finalRoutes = [...baseRouter]
+      const finalRoutes = [...baseRouter, ...errorRouter]
       const browserRouter = createBrowserRouter(finalRoutes as unknown as RouteObject[])
       setRouter(browserRouter)
     })

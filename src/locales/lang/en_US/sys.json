@@ -32,6 +32,34 @@
     },
     "login": {
       "logout": "Logout"
+    },
+    "admin": {
+      "component": {
+        "scroll": {
+          "scrollbar": "Scrollbar",
+          "infiniteScroll": "Infinite Scroll"
+        },
+        "editor": {
+          "editorSimple": "Editor Simple",
+          "editorFull": "Editor Full",
+          "parser": "Editor Parser"
+        }
+      },
+      "exception": {
+        "back": "Go to Home",
+        "exception403": {
+          "title": "No permission",
+          "subTitle": "The page you are trying access has restrictedaccess. Please refer to your system administrator"
+        },
+        "exception404": {
+          "title": "Sorry, Page Not Found!",
+          "subTitle": "Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Besure to check your spelling."
+        },
+        "exception500": {
+          "title": "500 Internal Server Error",
+          "subTitle": "There was an error, please try again later."
+        }
+      }
     }
   }
 }

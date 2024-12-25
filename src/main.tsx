@@ -5,11 +5,15 @@ import '@/assets/css/index.css'
 import 'virtual:svg-icons-register'
 // i18n
 import './locales/i18n'
+// helmet
+import { HelmetProvider } from 'react-helmet-async'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
-  <Suspense>
-    <App />
-  </Suspense>
+  <HelmetProvider>
+    <Suspense>
+      <App />
+    </Suspense>
+  </HelmetProvider>
 )

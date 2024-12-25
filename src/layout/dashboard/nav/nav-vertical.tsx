@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useMatches, useNavigate } from 'react-router-dom'
 import { usePathname } from '@/router/hooks'
 import { useThemeToken } from '@/theme/hooks'
-import { NAV_WIDTH } from '../config'
+import { HEADER_HEIGHT, NAV_WIDTH } from '../config'
 import { ThemeLayout, ThemeMode } from '@/types/enum'
 import { observer } from 'mobx-react-lite'
 import { useRouteToMenuFn } from '@/router/hooks'
@@ -83,6 +83,7 @@ const NavVertical = (props: Props) => {
       <NavLogo collapsed={collapsed} onToggle={handleToggleCollapsed} />
       <Scrollbar>
         <Menu
+          style={{ paddingBottom: `${HEADER_HEIGHT}px` }}
           mode="inline"
           items={items}
           theme={sidebarTheme}

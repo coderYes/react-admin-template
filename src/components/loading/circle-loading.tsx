@@ -1,9 +1,12 @@
-import { Spin } from 'antd';
+import { Spin } from 'antd'
 
-export function CircleLoading() {
+interface Props {
+  other?: string
+}
+export function CircleLoading({ other }: Props) {
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className={`flex h-full items-center justify-center ${other}`}>
       <Spin size="large" />
     </div>
-  );
+  )
 }

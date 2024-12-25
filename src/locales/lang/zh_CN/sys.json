@@ -32,6 +32,34 @@
     },
     "login": {
       "logout": "退出登录"
+    },
+    "admin": {
+      "component": {
+        "scroll": {
+          "scrollbar": "滚动条",
+          "infiniteScroll": "无限滚动"
+        },
+        "editor": {
+          "editorSimple": "简易富文本",
+          "editorFull": "完整富文本",
+          "parser": "富文本解析"
+        }
+      },
+      "exception": {
+        "back": "返回首页",
+        "exception403": {
+          "title": "无权限",
+          "subTitle": "您尝试访问的页面已限制访问。请咨询您的系统管理员"
+        },
+        "exception404": {
+          "title": "对不起，找不到页面！",
+          "subTitle": "很抱歉，我们找不到您要查找的页面。也许你输入的URL有误？请检查一下你的拼写。"
+        },
+        "exception500": {
+          "title": "500 内部服务器错误",
+          "subTitle": "出现错误，请稍后重试。"
+        }
+      }
     }
   }
 }

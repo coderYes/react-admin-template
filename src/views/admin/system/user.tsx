@@ -32,6 +32,7 @@ function Users() {
             hideInSearch: true
           }
         ]}
+        rowKey="id"
         request={async (
           // 第一个参数 params 查询表单和 params 参数的结合
           // 第一个参数中一定会有 pageSize 和  current ，这两个参数是 antd 的规范
@@ -42,11 +43,13 @@ function Users() {
           return {
             data: [
               {
+                id: 1,
                 name: '胡彦斌',
                 age: 32,
                 address: '西湖区湖底公园1号'
               },
               {
+                id: 2,
                 name: '胡彦祖',
                 age: 42,
                 address: '西湖区湖底公园1号'

@@ -5,7 +5,6 @@ import AuthHOC from '@/components/auth'
 const Login = lazy(() => import('@/views/login'))
 const HomePage = lazy(() => import('@/views/homepage'))
 const AdminLayout = lazy(() => import('@/layout/dashboard'))
-const NotFound = lazy(() => import('@/views/404'))
 
 const { VITE_APP_HOMEPAGE: ADMIN_HOMEPAGE } = import.meta.env
 const baseRouter: RouteObject[] = [
@@ -32,7 +31,7 @@ const baseRouter: RouteObject[] = [
   },
   {
     path: '*',
-    element: <NotFound />
+    element: <Navigate to="/404" replace />
   }
 ]
 

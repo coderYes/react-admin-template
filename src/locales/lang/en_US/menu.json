@@ -3,16 +3,27 @@
     "dashboard": {
       "workbench": "Workbench"
     },
-    "system": {
-      "system": "System",
-      "user": "User",
-      "role": "Role",
-      "test": "Test",
-      "test2": "Params Page"
+    "component": {
+      "component": "Component",
+      "icon": "Icon",
+      "scroll": "Scroll",
+      "editor": "Editor"
     },
-    "user": {
-      "user": "User",
-      "profile": "Profile"
+    "exception": {
+      "exception": "Exception",
+      "exception403": "403",
+      "exception404": "404",
+      "exception500": "500"
+    },
+    "test": {
+      "test": "Multi Menu",
+      "test1":{
+        "test1":"Menu One",
+        "test2":{
+          "test2":"Menu Two",
+          "index":"Menu TwoF Child"
+        }
+      }
     }
   }
 }
