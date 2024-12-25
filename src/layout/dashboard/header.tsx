@@ -52,7 +52,7 @@ const Header = ({ offsetTop = false, onToggleFullscreen }: Props) => {
           <div className="flex">
             <LocalePicker />
             <IconButton
-              onClick={() => window.open('https://github.com/coderYes/illusiontour-front')}
+              onClick={() => window.open('https://github.com/coderYes/react-admin-template')}
             >
               <Iconify icon="mdi:github" size={24} />
             </IconButton>

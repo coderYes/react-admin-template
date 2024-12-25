@@ -35,12 +35,12 @@ const customComponentConfig: ThemeConfig['components'] = {
 const colorPrimarys: {
   [k in ThemeColorPresets]: string
 } = {
-  default: '#365475',
-  green: '#0b9b8a',
-  purple: '#731fe0',
-  red: '#ff0028',
-  blue: '#1b47a5',
-  brown: '#925f17'
+  default: '#4096ff',
+  green: '#00A76F',
+  purple: '#722ed1',
+  red: '#cf1322',
+  blue: '#2f54eb',
+  brown: '#fda92d'
 }
 
 const themeModeToken: Record<'dark' | 'light', ThemeConfig> = {
