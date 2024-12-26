@@ -1,10 +1,10 @@
 import { CSSProperties, useState } from 'react'
 import { useThemeToken } from '@/theme/hooks'
-import { HEADER_HEIGHT, OFFSET_HEADER_HEIGHT } from './config'
+import { HEADER_HEIGHT, NAV_COLLAPSED_WIDTH, NAV_WIDTH, OFFSET_HEADER_HEIGHT } from './config'
 import { observer } from 'mobx-react-lite'
 import { Drawer } from 'antd'
 import { IconButton, Iconify, SvgIcon } from '@/components/icon'
-import type { LocalEnum } from '@/types/enum'
+import { ThemeLayout, type LocalEnum } from '@/types/enum'
 import Color from 'color'
 import rootStore from '@/store'
 import BreadCrumb from './common/bread-crumb'
@@ -23,7 +23,7 @@ const Header = ({ offsetTop = false, onToggleFullscreen }: Props) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { themeStore } = rootStore
   const {
-    themeSetting: { breadCrumb }
+    themeSetting: { breadCrumb, themeLayout }
   } = themeStore
   const { colorBgElevated } = useThemeToken()
 
@@ -69,16 +69,7 @@ const Header = ({ offsetTop = false, onToggleFullscreen }: Props) => {
         onClose={() => setDrawerOpen(false)}
         open={drawerOpen}
         closeIcon={false}
-        styles={{
-          header: {
-            display: 'none'
-          },
-          body: {
-            padding: 0,
-            overflow: 'hidden'
-          }
-        }}
-        width="auto"
+        width={themeLayout === ThemeLayout.Mini ? NAV_COLLAPSED_WIDTH : NAV_WIDTH}
       >
         <NavVertical closeSideBarDrawer={() => setDrawerOpen(false)} />
       </Drawer>

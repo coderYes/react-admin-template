@@ -35,7 +35,7 @@ const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
     <Content style={mainStyle} className="flex">
       <div className="flex-grow overflow-auto size-full" ref={ref}>
         <div
-          className={`m-auto size-full flex-grow sm:p-2 ${themeStretch ? '' : 'xl:max-w-screen-xl'} flex-row`}
+          className={`m-auto size-full flex-grow p-2 ${themeStretch ? '' : 'xl:max-w-screen-xl'} flex-row`}
         >
           {multiTab ? (
             <>
