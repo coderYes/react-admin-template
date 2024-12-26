@@ -7,7 +7,8 @@
       "component": "组件",
       "icon": "图标",
       "scroll": "滚动",
-      "editor": "富文本"
+      "editor": "富文本",
+      "toast": "Toast"
     },
     "exception": {
       "exception": "异常页",

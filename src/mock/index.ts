@@ -65,6 +65,18 @@ export default function (role?: string[]) {
                   icon: 'material-symbols:ad',
                   order: 4,
                   permission: 'admin:component:editor'
+                },
+                {
+                  id: 7,
+                  parentId: 2,
+                  name: 'Toast',
+                  path: '/admin/component/toast',
+                  type: 1,
+                  hidden: 0,
+                  status: 1,
+                  icon: 'material-symbols:ad',
+                  order: 4,
+                  permission: 'admin:component:toast'
                 }
               ]
             },

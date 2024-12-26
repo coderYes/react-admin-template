@@ -43,6 +43,16 @@
           "editorSimple": "简易富文本",
           "editorFull": "完整富文本",
           "parser": "富文本解析"
+        },
+        "toast": {
+          "message": "全局提示",
+          "notification": "通知提醒框",
+          "simple": "简单的",
+          "action": "自定义按钮",
+          "position": "位置",
+          "promise": "Promise",
+          "destroy": "关闭",
+          "confirm": "确认"
         }
       },
       "exception": {
