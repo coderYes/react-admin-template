@@ -1,7 +1,9 @@
 import { Suspense } from 'react'
-import loadable from '@loadable/component'
 import { CircleLoading } from '@/components/loading'
 import { Outlet } from 'react-router-dom'
+import loadable from '@loadable/component'
+import KeepAlive from 'react-activation'
+
 const modules = import.meta.glob('@/views/admin/*/**/*.tsx')
 const keysArray = Object.keys(modules)
 const loadables: any = loadable
@@ -23,7 +25,9 @@ export function LazyLoad(url: string) {
 
   return (
     <Suspense fallback={<CircleLoading />}>
-      <ComponentNode />
+      <KeepAlive>
+        <ComponentNode />
+      </KeepAlive>
     </Suspense>
   )
 }

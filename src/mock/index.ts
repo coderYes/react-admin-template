@@ -74,7 +74,7 @@ export default function (role?: string[]) {
                   type: 1,
                   hidden: 0,
                   status: 1,
-                  icon: 'material-symbols:ad',
+                  icon: 'fluent:lightbulb-20-filled',
                   order: 4,
                   permission: 'admin:component:toast'
                 }
