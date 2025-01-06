@@ -29,6 +29,7 @@ const NavVertical = (props: Props) => {
     const menuList = routeToMenuFn(userStore.menuList)
     return menuList
   }, [routeToMenuFn, userStore.menuList])
+  console.log('items', items)
   const {
     themeSetting: { themeLayout, themeMode, darkSidebar }
   } = themeStore

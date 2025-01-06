@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { Dropdown, Tabs, type MenuProps } from 'antd'
 import { useCurrentRouteMeta, useRouter } from '@/router/hooks'
 import { useResponsive, useThemeToken } from '@/theme/hooks'
@@ -18,6 +18,7 @@ import Color from 'color'
 import styled from 'styled-components'
 import rootStore from '@/store'
 import ScrollTabs from './common/scroll-tabs'
+
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 
 type Props = {
@@ -26,7 +27,7 @@ type Props = {
 export type TabItemType = {
   key: string
   label: string
-  children: any
+  children?: any
   timeStamp?: string
 }
 export default function MultiTabs({ offsetTop = false }: Props) {
@@ -96,14 +97,14 @@ export default function MultiTabs({ offsetTop = false }: Props) {
 
   useEffect(() => {
     if (!currentRouteMeta) return
-    let { outlet: children, path } = currentRouteMeta
+    let { path } = currentRouteMeta
 
     const isExisted = tabs.find((item) => item.key === path)
     if (!isExisted) {
       const i18Sign = replaceDynamicPath(currentRouteMeta)
       setTabs((prev) => [
         ...prev,
-        { key: currentRouteMeta.path, label: i18Sign, children, timeStamp: getTimeStamp() }
+        { key: currentRouteMeta.path, label: i18Sign, timeStamp: getTimeStamp() }
       ])
     }
   }, [currentRouteMeta])

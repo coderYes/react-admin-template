@@ -48,14 +48,3 @@ export function deleteCache(key: string) {
 export function clearCache() {
   window.localStorage.clear()
 }
-
-/**
- * 获取token
- * @returns
- */
-export function getToken() {
-  const token = window.localStorage.getItem('admin-token')
-  if (token) {
-    return token
-  }
-}

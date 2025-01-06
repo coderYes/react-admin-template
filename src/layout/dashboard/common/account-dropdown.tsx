@@ -11,9 +11,7 @@ export default function AccountDropdown() {
   const { t } = useTranslation()
   const { colorBgElevated, borderRadiusLG, boxShadowSecondary } = useThemeToken()
   const { userStore } = rootStore
-  const {
-    userInfo: { avatar, username, email }
-  } = userStore
+  const { avatar, name } = userStore
 
   const contentStyle: React.CSSProperties = {
     backgroundColor: colorBgElevated,
@@ -36,10 +34,6 @@ export default function AccountDropdown() {
       label: <NavLink to={HOMEPAGE}>{t('admin.dashboard.workbench')}</NavLink>,
       key: '0'
     },
-    {
-      label: <NavLink to="/admin/user/profile">{t('sys.account.user.profile')}</NavLink>,
-      key: '1'
-    },
     { type: 'divider' },
     {
       label: (
@@ -58,8 +52,8 @@ export default function AccountDropdown() {
       dropdownRender={(menu) => (
         <div style={contentStyle}>
           <div className="flex flex-col items-start p-4">
-            <div>{username}</div>
-            <div className="text-gray">{email}</div>
+            <div>{name}</div>
+            {/* <div className="text-gray">{email}</div> */}
           </div>
           <Divider style={{ margin: 0 }} />
           {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}

@@ -11,7 +11,7 @@ function App() {
     <BaseAntdConfig>
       <AntdApp>
         <Helmet>
-          <title>Slash Admin</title>
+          <title>React Admin Template</title>
           <link rel="icon" href={Logo} />
         </Helmet>
         <ToastContain />

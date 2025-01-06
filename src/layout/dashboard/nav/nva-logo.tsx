@@ -26,7 +26,7 @@ const NavLogo = ({ collapsed, onToggle }: Props) => {
         <Logo />
         {themeLayout !== ThemeLayout.Mini && (
           <span className="ml-2 text-xl font-bold" style={{ color: colorPrimary }}>
-            illtour
+            react admin
           </span>
         )}
       </div>

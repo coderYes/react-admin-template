@@ -25,13 +25,16 @@
         "fadeRight": "fade-right"
       }
     },
-    "account": {
-      "user": {
-        "profile": "Profile"
-      }
-    },
     "login": {
-      "logout": "Logout"
+      "logout": "Logout",
+      "signInFormTitle": "Sign in",
+      "accountPlaceholder": "Please input username",
+      "passwordPlaceholder": "Please input password",
+      "codePlaceholder": "Please input verification code",
+      "userName": "Username",
+      "password": "Password",
+      "code": "code",
+      "rememberMe": "Remember me"
     },
     "admin": {
       "component": {

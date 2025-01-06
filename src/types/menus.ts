@@ -1,21 +1,4 @@
 import type { Params } from 'react-router-dom'
-
-export interface MenuType {
-  id: number
-  parentId: number
-  name: string
-  path: string
-  type: number
-  hidden: number
-  status: number
-  icon?: string
-  order: string
-  permission?: string
-  children?: MenuType[]
-  outlet?: any
-  nodeRef?: any
-}
-
 export interface MneuItemsType {
   key: string
   label: React.ReactNode
@@ -27,4 +10,31 @@ export interface RouteMeta {
   key: string
   label: string
   params?: Params<string>
+}
+
+export interface MetaType {
+  title: string
+  icon: string
+  noCache: boolean
+  link: string
+}
+
+export type MenuType = 'M' | 'C' | 'F' // 菜单类型（M目录 C菜单 F按钮）
+
+export interface MenuItemType {
+  name: string
+  path: string
+  hidden: boolean
+  redirect: string
+  component: string
+  query: string
+  alwaysShow: boolean
+  meta: MetaType
+  status: string
+  visible: string
+  menuType: MenuType
+  children?: MenuItemType[] | null
+}
+export interface BaseMenuItemType extends MenuItemType {
+  outlet?: any
 }

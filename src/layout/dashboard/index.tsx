@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import ProgressBar from '@/components/progress-bar'
 import Nav from './nav'
 import Main from './main'
+import { Outlet } from 'react-router-dom'
 
 const AdminLayout = () => {
   const { themeStore } = rootStore
@@ -70,8 +71,9 @@ const AdminLayout = () => {
                 offsetTop={themeLayout === ThemeLayout.Vertical ? offsetTop : undefined}
                 onToggleFullscreen={() => toggleFullScreen()}
               />
-              <Nav />
+              {/* <Nav /> */}
               <Main ref={mainEl} offsetTop={offsetTop} />
+              {/* <Outlet/> */}
             </Layout>
           </Suspense>
         </Layout>

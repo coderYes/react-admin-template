@@ -25,13 +25,17 @@
         "fadeRight": "向右淡出"
       }
     },
-    "account": {
-      "user": {
-        "profile": "个人资料"
-      }
-    },
     "login": {
-      "logout": "退出登录"
+      "logout": "退出登录",
+      "signInFormTitle": "登录",
+      "accountPlaceholder": "请输入账号",
+      "passwordPlaceholder": "请输入密码",
+      "codePlaceholder": "请输入验证码",
+      "userName": "账号",
+      "password": "密码",
+      "code": "验证码",
+      "rememberMe": "记住我",
+      "loginButton": "登录"
     },
     "admin": {
       "component": {

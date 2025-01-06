@@ -1,7 +1,7 @@
 import { ProTable } from '@ant-design/pro-components'
 import { Button } from 'antd'
 
-function Users() {
+function User() {
   const requestMock = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -71,4 +71,4 @@ function Users() {
   )
 }
 
-export default Users
+export default User

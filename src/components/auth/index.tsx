@@ -1,51 +1,32 @@
-import { memo } from 'react'
+import { lazy, memo, useCallback, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
-import { getCache } from '@/utils/localCache'
 import { Navigate, useLocation } from 'react-router-dom'
+import { getToken } from '@/utils/auth'
+import { isRelogin } from '@/service/request'
 import rootStore from '@/store'
+import { useRouter } from '@/router/hooks'
+import { ErrorBoundary } from 'react-error-boundary'
+
+const PageError = lazy(() => import('@/views/system/exception/exception404'))
 
 type Props = {
   children?: ReactNode
 }
-const whiteList: string[] = ['/login']
 const AuthHOC: FC<Props> = ({ children }) => {
-  const NEXT_MAP: any = {
-    NEXT: children,
-    HOME: <Navigate to="/" />,
-    LOGIN: <Navigate to="/login" />
-  }
+  const router = useRouter()
+  const token = getToken()
 
-  let ISNEXT = 'HOME'
-
-  const {
-    userStore: { permissions }
-  } = rootStore
-
-  const { pathname } = useLocation()
-  const token = getCache('token')
-
-  if (token) {
-    if (pathname === '/login') {
-      ISNEXT = 'HOME'
-    } else if (whiteList.includes(pathname) || pathname === '/admin') {
-      ISNEXT = 'NEXT'
-    } else {
-      const permissionKey = pathname.split('/').filter(Boolean).join(':')
-      if (permissions.menuPermissionList.includes(permissionKey)) {
-        ISNEXT = 'NEXT'
-      } else {
-        ISNEXT = 'LOGIN'
-      }
+  const check = useCallback(() => {
+    if (!token) {
+      router.replace('/login')
     }
-  } else {
-    if (whiteList.includes(pathname)) {
-      ISNEXT = 'NEXT'
-    } else {
-      ISNEXT = 'HOME'
-    }
-  }
+  }, [router, token])
 
-  return NEXT_MAP[ISNEXT]
+  useEffect(() => {
+    check()
+  }, [check])
+
+  return <ErrorBoundary FallbackComponent={PageError}>{children}</ErrorBoundary>
 }
 
 export default memo(AuthHOC)

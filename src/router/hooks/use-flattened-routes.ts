@@ -9,6 +9,6 @@ export function useFlattenedRoutes() {
   const { userStore } = rootStore
   const flattenRoutes = useCallback(flattenTree, [])
   return useMemo(() => {
-    return flattenRoutes(userStore.menuList, 2)
+    return flattenRoutes(userStore.menuList, 'F')
   }, [flattenRoutes, userStore.menuList])
 }

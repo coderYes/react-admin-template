@@ -22,7 +22,7 @@ const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
 
   const currentOutlet = useOutlet()
   const flattenedRoutes = useFlattenedRoutes()
-  const { nodeRef } = flattenedRoutes.find((route) => route.path === location.pathname) ?? {}
+  const { nodeRef }: any = flattenedRoutes.find((route) => route.path === location.pathname) ?? {}
 
   const mainStyle: CSSProperties = {
     paddingTop: multiTab ? MULTI_TABS_HEIGHT : 0,
