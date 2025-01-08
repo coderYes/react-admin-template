@@ -1,15 +1,8 @@
-import type { Params } from 'react-router-dom'
-export interface MneuItemsType {
+export interface ItemType {
   key: string
   label: React.ReactNode
   icon?: React.ReactNode
-  children?: MneuItemsType[]
-}
-
-export interface RouteMeta {
-  key: string
-  label: string
-  params?: Params<string>
+  children?: ItemType[]
 }
 
 export interface MetaType {
@@ -30,8 +23,8 @@ export interface MenuItemType {
   query: string
   alwaysShow: boolean
   meta: MetaType
-  status: string
-  visible: string
+  status?: string
+  visible?: string
   menuType: MenuType
   children?: MenuItemType[] | null
 }

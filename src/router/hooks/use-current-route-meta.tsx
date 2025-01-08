@@ -3,7 +3,9 @@ import { useRouter } from './use-router'
 import type { BaseMenuItemType } from '@/types/menus'
 import { type Params, useMatches } from 'react-router-dom'
 import { useFlattenedRoutes } from '@/router/hooks'
+
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+
 /**
  * 返回当前路由Meta信息
  */
@@ -12,24 +14,23 @@ export function useCurrentRouteMeta() {
 
   // 获取所有匹配的路由
   const matchs = useMatches()
-  console.log('matchs', matchs)
+
   // 获取拍平后的路由菜单
   const flattenedRoutes = useFlattenedRoutes()
-  console.log('flattenedRoutes', flattenedRoutes)
+
   const [currentRouteMeta, setCurrentRouteMeta] = useState<BaseMenuItemType>()
 
   useEffect(() => {
     // 获取当前匹配的路由
     const lastRoute = matchs.at(-1)
-    if (!lastRoute || lastRoute.pathname === HOMEPAGE) return
+    if (!lastRoute) return
 
-    const { pathname, params } = lastRoute
+    const { pathname } = lastRoute
 
     const matchedRouteMeta = flattenedRoutes.find((item) => {
-      const replacedKey = replaceDynamicParams(item.component, params)
-      return replacedKey === pathname || `/${replacedKey}` === pathname
+      return item.path === pathname || `/${item.path}` === pathname
     })
-    console.log('matchedRouteMeta', matchedRouteMeta)
+
     if (matchedRouteMeta) {
       setCurrentRouteMeta({ ...matchedRouteMeta })
     } else {
@@ -38,24 +39,4 @@ export function useCurrentRouteMeta() {
   }, [matchs])
 
   return currentRouteMeta
-}
-
-/**
- * replace `user/:id`  to `/user/1234512345`
- */
-export const replaceDynamicParams = (menuKey: string, params: Params<string>) => {
-  let replacedPathName = menuKey
-
-  // 解析路由路径中的参数名称
-  const paramNames = menuKey.match(/:\w+/g)
-  if (paramNames) {
-    for (const paramName of paramNames) {
-      // 去掉冒号，获取参数名称
-      const paramKey = paramName.slice(1)
-      if (!params[paramKey]) continue
-
-      replacedPathName = replacedPathName.replace(paramName, params[paramKey])
-    }
-  }
-  return replacedPathName
 }

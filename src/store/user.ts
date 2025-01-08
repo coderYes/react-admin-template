@@ -20,7 +20,7 @@ class UserStore {
 
     makePersistable(this, {
       name: 'userInfo',
-      properties: ['menuList', 'id', 'name', 'avatar', 'roles', 'permissions'],
+      properties: ['id', 'name', 'avatar', 'roles', 'permissions'],
       storage: window.localStorage
     })
   }

@@ -19,17 +19,18 @@ type Props = {
 
 const NavVertical = (props: Props) => {
   const navigate = useNavigate()
+  const routeToMenuFn = useRouteToMenuFn()
   const matches = useMatches()
   const pathname = usePathname()
-  const { colorBorder } = useThemeToken()
-  const routeToMenuFn = useRouteToMenuFn()
 
+  const { colorBorder } = useThemeToken()
   const { themeStore, userStore } = rootStore
+
   const items = useMemo(() => {
     const menuList = routeToMenuFn(userStore.menuList)
     return menuList
   }, [routeToMenuFn, userStore.menuList])
-  console.log('items', items)
+
   const {
     themeSetting: { themeLayout, themeMode, darkSidebar }
   } = themeStore
@@ -41,7 +42,7 @@ const NavVertical = (props: Props) => {
   useEffect(() => {
     if (!collapsed) {
       const keys = matches
-        .filter((match) => match.pathname !== '/admin' && match.pathname !== pathname)
+        .filter((match) => match.pathname !== '/' && match.pathname !== pathname)
         .map((match) => match.pathname)
       setOpenKeys(keys)
     }

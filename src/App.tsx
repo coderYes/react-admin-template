@@ -6,7 +6,6 @@ import BaseAntdConfig from '@/theme/antd'
 import Logo from '@/assets/icons/ic-logo.svg'
 
 function App() {
-  console.log('app reload')
   return (
     <BaseAntdConfig>
       <AntdApp>

@@ -1,10 +1,19 @@
 import { Layout, Typography } from 'antd'
 import { requireImg } from '@/utils/file'
+import { getToken } from '@/utils/auth'
+import { Navigate } from 'react-router-dom'
 import * as motion from 'motion/react-client'
 import LoginForm from './cpn/LoginForm'
 import LocalePicker from '@/layout/dashboard/common/locale-picker'
 
+const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+
 function Login() {
+  const token = getToken()
+  if (token) {
+    // 如果有授权，则跳转到首页
+    return <Navigate to={HOMEPAGE} replace />
+  }
   return (
     <Layout className="relative flex !min-h-screen !w-full !flex-row">
       <div

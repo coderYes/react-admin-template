@@ -5,7 +5,9 @@ import { Divider, Dropdown, type MenuProps } from 'antd'
 import { useThemeToken } from '@/theme/hooks'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+
 export default function AccountDropdown() {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -31,7 +33,7 @@ export default function AccountDropdown() {
 
   const items: MenuProps['items'] = [
     {
-      label: <NavLink to={HOMEPAGE}>{t('admin.dashboard.workbench')}</NavLink>,
+      label: <NavLink to={HOMEPAGE}>{t('Home')}</NavLink>,
       key: '0'
     },
     { type: 'divider' },

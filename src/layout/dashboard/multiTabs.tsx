@@ -11,7 +11,6 @@ import {
   OFFSET_HEADER_HEIGHT
 } from './config'
 import { Iconify } from '@/components/icon'
-import { replaceDynamicPath } from '@/router/hooks/use-route-to-menu'
 import { useTranslation } from 'react-i18next'
 import { getTimeStamp } from '@/utils/time'
 import Color from 'color'
@@ -97,14 +96,13 @@ export default function MultiTabs({ offsetTop = false }: Props) {
 
   useEffect(() => {
     if (!currentRouteMeta) return
-    let { path } = currentRouteMeta
+    let { path, name } = currentRouteMeta
 
     const isExisted = tabs.find((item) => item.key === path)
     if (!isExisted) {
-      const i18Sign = replaceDynamicPath(currentRouteMeta)
       setTabs((prev) => [
         ...prev,
-        { key: currentRouteMeta.path, label: i18Sign, timeStamp: getTimeStamp() }
+        { key: currentRouteMeta.path, label: name, timeStamp: getTimeStamp() }
       ])
     }
   }, [currentRouteMeta])

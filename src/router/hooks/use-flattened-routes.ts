@@ -7,8 +7,8 @@ import rootStore from '@/store'
  */
 export function useFlattenedRoutes() {
   const { userStore } = rootStore
-  const flattenRoutes = useCallback(flattenTree, [])
+  const flattenRoutesFunc = useCallback(flattenTree, [])
   return useMemo(() => {
-    return flattenRoutes(userStore.menuList, 'F')
-  }, [flattenRoutes, userStore.menuList])
+    return flattenRoutesFunc(userStore.menuList, 'F')
+  }, [flattenRoutesFunc, userStore.menuList])
 }

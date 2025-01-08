@@ -16,7 +16,7 @@ export function LazyLoad(url: string) {
   const isExist = keysArray.includes(moduleKey)
   const ComponentNode = isExist
     ? loadables(async () => {
-        return modules[`/src/views${cleanedPath}/index.tsx`]()
+        return modules[moduleKey]()
       })
     : loadables(async () => {
         return modules[`/src/views/system/exception/exception404.tsx`]()
