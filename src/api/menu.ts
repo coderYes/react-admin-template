@@ -1,12 +1,11 @@
-import request, { type ResponseType } from '@/service'
-import { MenuItemType } from '@/types/menus'
+import request from '@/service'
 
 /**
  * 获取菜单
  * @returns
  */
 export function getRouters() {
-  return request.get<ResponseType<MenuItemType[]>>({
+  return request.get({
     url: '/getRouters'
   })
 }

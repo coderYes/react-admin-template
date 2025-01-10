@@ -1,9 +1,6 @@
 import { lazy, memo, useCallback, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
 import { getToken } from '@/utils/auth'
-import { isRelogin } from '@/service/request'
-import rootStore from '@/store'
 import { useRouter } from '@/router/hooks'
 import { ErrorBoundary } from 'react-error-boundary'
 

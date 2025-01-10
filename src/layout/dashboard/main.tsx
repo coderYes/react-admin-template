@@ -1,11 +1,12 @@
 import { Content } from 'antd/es/layout/layout'
 import { type CSSProperties, forwardRef } from 'react'
 import { useOutlet } from 'react-router-dom'
-import { useThemeToken } from '@/theme/hooks'
-import { MULTI_TABS_HEIGHT } from './config'
+import { useResponsive, useThemeToken } from '@/theme/hooks'
+import { MULTI_TABS_HEIGHT, NAV_COLLAPSED_WIDTH, NAV_WIDTH } from './config'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useFlattenedRoutes } from '@/router/hooks'
 import { pageTransition } from '@/theme/antd/theme'
+import { ThemeLayout } from '@/types/enum'
 import rootStore from '@/store'
 import MultiTabs from './multiTabs'
 import './style.css'
@@ -16,9 +17,10 @@ type Props = {
 const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
   const { themeStore } = rootStore
   const {
-    themeSetting: { themeStretch, multiTab, pageTransAnimation }
+    themeSetting: { themeLayout, themeStretch, multiTab, pageTransAnimation }
   } = themeStore
   const { colorBgElevated } = useThemeToken()
+  const { screenMap } = useResponsive()
 
   const currentOutlet = useOutlet()
   const flattenedRoutes = useFlattenedRoutes()
@@ -27,15 +29,16 @@ const Main = forwardRef<HTMLDivElement, Props>(({ offsetTop = false }, ref) => {
   const mainStyle: CSSProperties = {
     paddingTop: multiTab ? MULTI_TABS_HEIGHT : 0,
     background: colorBgElevated,
-    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    width: '100%'
+    width: `calc(100vw - ${
+      screenMap.md ? (themeLayout === ThemeLayout.Mini ? NAV_COLLAPSED_WIDTH : NAV_WIDTH) : 0
+    }px`
   }
 
   return (
     <Content style={mainStyle} className="flex">
       <div className="flex-grow overflow-auto size-full" ref={ref}>
         <div
-          className={`m-auto size-full flex-grow p-2 ${themeStretch ? '' : 'xl:max-w-screen-xl'} flex-row`}
+          className={`m-auto size-full flex-grow sm:p-2 ${themeStretch ? '' : 'xl:max-w-screen-xl'} flex-row`}
         >
           {multiTab ? (
             <>

@@ -1,11 +1,9 @@
-import { Modal } from 'antd'
-import { deleteCache } from '@/utils/localCache'
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import errorCode from '@/utils/errorCode'
+import { deleteCache } from '@/utils/localCache'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { getToken, removeToken } from '@/utils/auth'
-import { notice, toast } from '@/components/toast'
-const { confirm } = Modal
+import { message, notification, modal } from '@/components/baseNotice'
 
 type ErrorCodeKey = keyof typeof errorCode
 
@@ -49,7 +47,7 @@ class Request {
         if (code === 401) {
           if (!isRelogin.show) {
             isRelogin.show = true
-            confirm({
+            modal.confirm({
               title: '系统提示',
               content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
               onOk() {
@@ -65,22 +63,15 @@ class Request {
           }
           return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
         } else if (code === 500) {
-          toast({
-            content: msg,
-            type: 'error'
-          })
+          message.error(msg)
           return Promise.reject(new Error(msg))
         } else if (code === 601) {
-          toast({
-            content: msg,
-            type: 'warning'
-          })
+          message.warning(msg)
           return Promise.reject(new Error(msg))
         } else if (code !== 200) {
-          notice({
+          notification.error({
             message: '请求失败',
-            description: msg,
-            type: 'error'
+            description: msg
           })
           return Promise.reject('error')
         } else {
@@ -96,9 +87,8 @@ class Request {
         } else if (errorMessage.includes('Request failed with status code')) {
           errorMessage = '接口' + errorMessage.substr(errorMessage.length - 3) + '异常'
         }
-        toast({
+        message.error({
           content: errorMessage,
-          type: 'error',
           duration: 5 * 1000
         })
         return err
@@ -125,6 +115,10 @@ class Request {
 
   post<T = any>(config: AxiosRequestConfig): Promise<T> {
     return this.request<T>({ ...config, method: 'POST' })
+  }
+
+  put<T = any>(config: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ ...config, method: 'PUT' })
   }
 
   delete<T = any>(config: AxiosRequestConfig): Promise<T> {

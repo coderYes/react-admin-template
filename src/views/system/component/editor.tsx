@@ -27,18 +27,18 @@ function EditorPage() {
       >
         https://github.com/zenoamaro/react-quill
       </Typography.Link>
-      <Card title={t('sys.admin.component.editor.editorSimple')}>
+      <Card title={t('sys.admin.system.editor.editorSimple')}>
         <Editor id="sample-editor" sample value={quillSimple} onChange={setQuillSimple} />
       </Card>
       <div className="h-10" />
-      <Card title={t('sys.admin.component.editor.editorFull')}>
+      <Card title={t('sys.admin.system.editor.editorFull')}>
         <Editor
           id="full-editor"
           value={quillFull}
           onChange={setQuillFull}
         />
         <div className="h-4" />
-        <Card title={t('sys.admin.component.editor.parser')}>{parse(quillFull)}</Card>
+        <Card title={t('sys.admin.system.editor.parser')}>{parse(quillFull)}</Card>
       </Card>
       <div className="h-10" />
     </>

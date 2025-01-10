@@ -51,7 +51,7 @@ class UserStore {
     })
   }
 
-  setMenuList(menuList: MenuItemType[]) {
+  setMenuList(menuList: MenuItemType[] = []) {
     this.menuList = menuList
   }
 
@@ -93,5 +93,5 @@ class UserStore {
     })
   }
 }
-const usersStore = new UserStore()
-export default usersStore
+const userStore = new UserStore()
+export default userStore

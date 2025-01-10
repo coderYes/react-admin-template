@@ -3,7 +3,9 @@ import Request from './request'
 
 export interface ResponseType<T = any> {
   code: number
-  data: T
+  data?: T
+  rows?: T[]
+  total?: number
   msg: string
   token?: string
   permissions?: string[]

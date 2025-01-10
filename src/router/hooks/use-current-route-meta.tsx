@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from './use-router'
 import type { BaseMenuItemType } from '@/types/menus'
-import { type Params, useMatches } from 'react-router-dom'
+import { useMatches } from 'react-router-dom'
 import { useFlattenedRoutes } from '@/router/hooks'
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env

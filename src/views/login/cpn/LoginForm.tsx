@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Form, Input, Row } from 'antd'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCodeImg } from '@/api/login'
-import { LoginType } from '@/types/login'
+import { LoginType, VerifyCodeType } from '@/types/login'
 import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { useNavigate } from 'react-router-dom'
 import rootStore from '@/store'
@@ -34,7 +34,7 @@ function LoginForm() {
   }
 
   const getCode = () => {
-    getCodeImg().then((res) => {
+    getCodeImg().then((res: { data: VerifyCodeType }) => {
       const isCaptchaEnabled =
         res.data.captchaEnabled === undefined ? true : res.data.captchaEnabled
       setCaptchaEnabled(isCaptchaEnabled)

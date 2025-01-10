@@ -1,6 +1,6 @@
 import { App as AntdApp } from 'antd'
 import { Helmet } from 'react-helmet-async'
-import { ToastContain, NotificationContain } from '@/components/toast'
+import BaseNotice from '@/components/baseNotice'
 import BrowserRouter from '@/router/BrowserRouter'
 import BaseAntdConfig from '@/theme/antd'
 import Logo from '@/assets/icons/ic-logo.svg'
@@ -13,8 +13,7 @@ function App() {
           <title>React Admin Template</title>
           <link rel="icon" href={Logo} />
         </Helmet>
-        <ToastContain />
-        <NotificationContain />
+        <BaseNotice />
 
         <BrowserRouter />
       </AntdApp>

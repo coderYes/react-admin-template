@@ -51,7 +51,6 @@ const AdminLayout = () => {
   const secondLayoutStyle: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     paddingLeft: screenMap.md
       ? themeLayout === ThemeLayout.Mini
         ? NAV_COLLAPSED_WIDTH

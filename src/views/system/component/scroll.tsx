@@ -8,12 +8,12 @@ function Scroll() {
   const TABS: TabsProps['items'] = [
     {
       key: 'scrollbar',
-      label: t('sys.admin.component.scroll.scrollbar'),
+      label: t('sys.admin.system.scroll.scrollbar'),
       children: <ScrollbarView />
     },
     {
       key: 'infiniteScroll',
-      label: t('sys.admin.component.scroll.infiniteScroll'),
+      label: t('sys.admin.system.scroll.infiniteScroll'),
       children: <InfiniteScroll />
     }
     // {

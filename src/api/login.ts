@@ -1,5 +1,5 @@
-import request, { type ResponseType } from '@/service'
-import type { LoginType, VerifyCodeType } from '@/types/login'
+import request from '@/service'
+import type { LoginType } from '@/types/login'
 
 /**
  * 用户登录
@@ -7,7 +7,7 @@ import type { LoginType, VerifyCodeType } from '@/types/login'
  * @returns
  */
 export function login(data: LoginType) {
-  return request.post<ResponseType>({
+  return request.post({
     url: '/login',
     headers: {
       isToken: false
@@ -21,7 +21,7 @@ export function login(data: LoginType) {
  * @returns
  */
 export function getCodeImg() {
-  return request.get<ResponseType<VerifyCodeType>>({
+  return request.get({
     url: '/captchaImage',
     headers: {
       isToken: false
@@ -35,7 +35,7 @@ export function getCodeImg() {
  * @returns
  */
 export function getInfo() {
-  return request.get<ResponseType>({
+  return request.get({
     url: '/getInfo'
   })
 }
@@ -45,7 +45,7 @@ export function getInfo() {
  * @returns
  */
 export function logout(token: string) {
-  return request.post<ResponseType>({
+  return request.post({
     url: '/logout',
     data: { token }
   })

@@ -36,7 +36,7 @@
       "code": "code",
       "rememberMe": "Remember me"
     },
-    "admin": {
+    "system": {
       "component": {
         "scroll": {
           "scrollbar": "Scrollbar",
@@ -46,16 +46,6 @@
           "editorSimple": "Editor Simple",
           "editorFull": "Editor Full",
           "parser": "Editor Parser"
-        },
-        "toast": {
-          "message": "Message",
-          "notification": "Notification",
-          "simple": "Simple",
-          "action": "With Action",
-          "position": "Position",
-          "promise": "Promise",
-          "destroy": "Destroy",
-          "confirm": "Confirm"
         }
       },
       "exception": {
