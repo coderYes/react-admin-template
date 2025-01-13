@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { Navigate, type RouteObject } from 'react-router-dom'
 import AuthHOC from '@/components/auth'
+import { MenuItemType } from '@/types/menus'
 
 const Login = lazy(() => import('@/views/login'))
 const AdminLayout = lazy(() => import('@/layout/dashboard'))
@@ -8,7 +9,7 @@ const Dashboard = lazy(() => import('@/views/system/dashboard/workbench'))
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 
-const baseRouter: RouteObject[] = [
+export const baseRouter: RouteObject[] = [
   {
     path: '/',
     element: (
@@ -34,4 +35,22 @@ const baseRouter: RouteObject[] = [
   }
 ]
 
-export default baseRouter
+export const dynamicRoutes: MenuItemType[] = [
+  {
+    name: 'DictData',
+    path: '/system/dict-data/:dictId',
+    hidden: true,
+    redirect: 'noRedirect',
+    component: 'system/dict/data',
+    query: '',
+    alwaysShow: false,
+    meta: {
+      title: '字典数据',
+      icon: 'Home',
+      noCache: false,
+      link: ''
+    },
+    menuType: 'C',
+    permissions: ['system:dict:list']
+  }
+]

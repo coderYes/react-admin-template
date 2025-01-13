@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import type { RouteObject } from 'react-router-dom'
 import { getRouters } from '@/api/menu'
-import { assembleRouter } from '@/utils/menu'
+import { assembleRouter, filterDynamicRoutes } from '@/utils/menu'
 import { MenuItemType } from '@/types/menus'
-import baseRouter from './BaseRouter'
+import { baseRouter, dynamicRoutes } from './BaseRouter'
 import errorRouter from './ErrorRouter'
 import rootStore from '@/store'
 
@@ -22,6 +22,8 @@ function BrowserRouter() {
     try {
       if (roles.length) {
         const res = await getRouters()
+        const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
+
         const list: MenuItemType[] = [
           {
             name: 'Home',
@@ -39,10 +41,13 @@ function BrowserRouter() {
             },
             menuType: 'C'
           },
-          ...res.data
+          ...asyncRoutes
         ]
-        userStore.setMenuList(list)
-        const permissionRoutes = assembleRouter(list)
+        userStore.setMenuList([...list, ...res.data])
+        // 动态添加路由数据
+        const assembleList = [...res.data, ...asyncRoutes]
+        const permissionRoutes = assembleRouter(assembleList)
+
         baseRouter[0].children?.push(...permissionRoutes)
       }
       const finalRoutes = [...baseRouter, ...errorRouter]

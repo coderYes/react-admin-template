@@ -2,27 +2,26 @@ import { LazyLoad, SuspenseHOC } from './LazyLoad'
 import type { RouteObject } from 'react-router-dom'
 import type { MenuItemType, MenuType } from '@/types/menus'
 import { createRef } from 'react'
+import { hasPermiOr, hasRoleOr } from './auth'
 
 /**
  * 组装路由
  * @param menus 菜单列表
  * @returns
  */
-export function assembleRouter(menus: MenuItemType[], currentPath: string = ''): RouteObject[] {
+export function assembleRouter(menus: MenuItemType[]): RouteObject[] {
   let routes: RouteObject[] = []
 
   menus
     .filter((item) => item.redirect)
     .forEach((item) => {
-      const newPath = currentPath ? `${currentPath}/${item.path}` : item.path
-
       const transformedItem: RouteObject = {
         path: item.path,
-        element: item.menuType === 'M' ? SuspenseHOC() : LazyLoad(newPath)
+        element: item.menuType === 'M' ? SuspenseHOC() : LazyLoad(item.component)
       }
 
       if (item.children && item.children.length > 0) {
-        transformedItem.children = assembleRouter(item.children, newPath)
+        transformedItem.children = assembleRouter(item.children)
       }
       routes.push(transformedItem)
     })
@@ -52,4 +51,21 @@ export function flattenTree(
       }
     })
   return result
+}
+
+// 动态路由遍历，验证是否具备权限
+export function filterDynamicRoutes(routes: MenuItemType[]) {
+  const res: MenuItemType[] = []
+  routes.forEach((route) => {
+    if (route.permissions) {
+      if (hasPermiOr(route.permissions)) {
+        res.push(route)
+      }
+    } else if (route.roles) {
+      if (hasRoleOr(route.roles)) {
+        res.push(route)
+      }
+    }
+  })
+  return res
 }

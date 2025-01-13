@@ -53,3 +53,71 @@ export function updateDict(data: any) {
     data
   })
 }
+
+/**
+ * 获取字典数据
+ * @param dictId 字典编码
+ * @returns
+ */
+export function getDictDataList(params: any) {
+  return request.get({
+    url: `/system/dict/data/list`,
+    params
+  })
+}
+
+/**
+ * 查询字典类型详细
+ * @param dictId 字典编码
+ * @returns
+ */
+export function getDictType(dictId: string) {
+  return request.get({
+    url: `/system/dict/type/${dictId}`
+  })
+}
+
+/**
+ * 获取字典选择框列表
+ * @returns
+ */
+export function getDictOptionselect() {
+  return request.get({
+    url: '/system/dict/type/optionselect'
+  })
+}
+
+/**
+ * 新增字典数据
+ * @param data
+ * @returns
+ */
+export function addDictData(data: any) {
+  return request.post({
+    url: '/system/dict/data',
+    data
+  })
+}
+
+/**
+ * 修改字典数据
+ * @param data
+ * @returns
+ */
+export function updateData(data: any) {
+  return request.put({
+    url: '/system/dict/data',
+    data
+  })
+}
+
+/**
+ * 删除字典数据
+ * @param dictCode
+ * @returns
+ */
+export function delDictData(dictCode: string) {
+  return request.delete({
+    url: `/system/dict/data/${dictCode}`
+  })
+}

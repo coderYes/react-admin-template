@@ -6,6 +6,11 @@ import { useFlattenedRoutes } from '@/router/hooks'
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 
+function matchPath(pathname: string, routePath: string): boolean {
+  const pathToRegexp = (path: string) => new RegExp(`^${path.replace(/:[^\s/]+/g, '([\\w-]+)')}$`)
+  return pathToRegexp(routePath).test(pathname)
+}
+
 /**
  * 返回当前路由Meta信息
  */
@@ -28,7 +33,7 @@ export function useCurrentRouteMeta() {
     const { pathname } = lastRoute
 
     const matchedRouteMeta = flattenedRoutes.find((item) => {
-      return item.path === pathname || `/${item.path}` === pathname
+      return matchPath(pathname, item.path)
     })
 
     if (matchedRouteMeta) {

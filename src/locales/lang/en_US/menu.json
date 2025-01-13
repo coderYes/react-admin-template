@@ -23,5 +23,6 @@
   "Build": "Build",
   "Gen": "Gen",
   "Swagger": "Swagger",
-  "Source": "Source"
+  "Source": "Source",
+  "DictData": "DictData"
 }

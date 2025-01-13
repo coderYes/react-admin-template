@@ -26,6 +26,8 @@ export interface MenuItemType {
   status?: string
   visible?: string
   menuType: MenuType
+  permissions?: string[]
+  roles?: string[]
   children?: MenuItemType[] | null
 }
 export interface BaseMenuItemType extends MenuItemType {

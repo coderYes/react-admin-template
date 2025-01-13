@@ -23,5 +23,6 @@
   "Build": "表单构建",
   "Gen": "代码生成",
   "Swagger": "系统接口",
-  "Source": "海瑞克源码"
+  "Source": "海瑞克源码",
+  "DictData": "字典数据"
 }

@@ -1,5 +1,12 @@
-import { useRef, useState } from 'react'
-import { addDict, delDict, getDict, updateDict } from '@/api/dict'
+import { useRef, useState, useEffect } from 'react'
+import {
+  getDictDataList,
+  getDictType,
+  getDictOptionselect,
+  updateData,
+  addDictData,
+  delDictData
+} from '@/api/dict'
 import { formatDate } from '@/utils/time'
 import {
   ProTable,
@@ -8,29 +15,54 @@ import {
   ProFormRadio,
   ProFormTextArea,
   ProFormInstance,
-  ActionType
+  ActionType,
+  ProFormDigit
 } from '@ant-design/pro-components'
-import { Button, Tag } from 'antd'
-import { useThemeToken } from '@/theme/hooks'
-import type { DictType } from '@/types/dict'
+import { Button, FormInstance, Tag } from 'antd'
+import type { DictDataType } from '@/types/dict'
 import { Iconify } from '@/components/icon'
 import { useDict } from '@/hook'
 import { message, modal } from '@/components/baseNotice'
-import { useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 function Dict() {
-  const navigate = useNavigate()
-  const { colorPrimary } = useThemeToken()
+  const { dictId } = useParams()
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [modalVisit, setModalVisit] = useState(false)
   const [title, setTitle] = useState('')
+  const [dictTypeOptions, setDictTypeOptions] = useState('')
+  const [dictType, setDictType] = useState('')
 
-  const formRef = useRef<ProFormInstance>()
-  const ref = useRef<ActionType>()
+  const modalFormRef = useRef<ProFormInstance>()
+  const actionRef = useRef<ActionType>()
+  const formRef = useRef<FormInstance>()
   const sys_normal_disable = useDict('sys_normal_disable')
 
-  const onTypeClick = (record: DictType) => {
-    navigate('/system/dict-data/' + record.dictId)
+  useEffect(() => {
+    getTypes()
+    getTypeList()
+  }, [])
+
+  const getTypes = () => {
+    getDictType(dictId!).then((res) => {
+      setDictType(res.data.dictType)
+      formRef?.current?.setFieldsValue({
+        dictType: res.data.dictType
+      })
+      actionRef?.current?.reload()
+    })
+  }
+
+  const getTypeList = () => {
+    getDictOptionselect().then((res) => {
+      const options = res.data.map((item: any) => {
+        return {
+          label: item.dictName,
+          value: item.dictType
+        }
+      })
+      setDictTypeOptions(options)
+    })
   }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -38,12 +70,12 @@ function Dict() {
   }
 
   const onCler = () => {
-    formRef?.current?.resetFields()
+    modalFormRef?.current?.resetFields()
   }
 
-  const onHandleRow = (isAdd: boolean, record?: DictType) => {
+  const onHandleRow = (isAdd: boolean, record?: DictDataType) => {
     onCler()
-    formRef?.current?.setFieldsValue(isAdd ? {} : record)
+    modalFormRef?.current?.setFieldsValue(isAdd ? { dictType } : { ...record, dictType })
     setTitle(isAdd ? '添加字典类型' : '编辑字典类型')
     setModalVisit(true)
   }
@@ -54,30 +86,30 @@ function Dict() {
       title: '系统提示',
       content: `是否确认删除字典编号为"${ids}"的数据项？`,
       onOk() {
-        delDict(ids).then(() => {
+        delDictData(ids).then(() => {
           message.success('删除成功')
-          ref?.current?.reload()
+          actionRef?.current?.reload()
         })
       }
     })
   }
 
   const onFinish = async () => {
-    formRef.current
+    modalFormRef.current
       ?.validateFields()
-      .then(async () => {
-        const data: DictType = formRef?.current?.getFieldsValue(true)
-        if (data.dictId) {
-          updateDict(data).then(() => {
+      .then(async (value) => {
+        const data: DictDataType = modalFormRef?.current?.getFieldsValue(true)
+        if (data.dictCode) {
+          updateData(data).then(() => {
             message.success('修改成功')
             setModalVisit(false)
-            ref?.current?.reload()
+            actionRef?.current?.reload()
           })
         } else {
-          addDict(data).then(() => {
+          addDictData(data).then(() => {
             message.success('添加成功')
             setModalVisit(false)
-            ref?.current?.reload()
+            actionRef?.current?.reload()
           })
         }
       })
@@ -88,8 +120,10 @@ function Dict() {
 
   return (
     <>
-      <ProTable<DictType>
-        actionRef={ref}
+      <ProTable<DictDataType>
+        actionRef={actionRef}
+        formRef={formRef}
+        manualRequest={true}
         defaultSize="small"
         rowSelection={{
           selectedRowKeys,
@@ -99,8 +133,9 @@ function Dict() {
           className: 'mbe-0'
         }}
         request={async (params) => {
-          const res = await getDict({
-            ...params,
+          const searchValue = formRef?.current?.getFieldsValue()
+          const res = await getDictDataList({
+            ...searchValue,
             pageNum: params.current,
             pageSize: params.pageSize
           })
@@ -130,22 +165,36 @@ function Dict() {
           },
           {
             title: '字典名称',
-            dataIndex: 'dictName',
+            dataIndex: 'dictType',
+            valueType: 'select',
+            fieldProps: {
+              options: dictTypeOptions,
+              allowClear: false
+            },
+            hideInTable: true
+          },
+          {
+            title: '字典编码',
+            dataIndex: 'dictCode',
+            hideInSearch: true,
             width: 150
           },
           {
-            title: '字典类型',
-            dataIndex: 'dictType',
-            width: 150,
-            renderText: (text: string, record: DictType) => (
-              <span
-                className="cursor-pointer"
-                style={{ color: colorPrimary, marginBottom: 0 }}
-                onClick={() => onTypeClick(record)}
-              >
-                {text}
-              </span>
-            )
+            title: '字典标签',
+            dataIndex: 'dictLabel',
+            width: 150
+          },
+          {
+            title: '字典键值',
+            dataIndex: 'dictValue',
+            hideInSearch: true,
+            width: 150
+          },
+          {
+            title: '字典排序',
+            dataIndex: 'dictSort',
+            hideInSearch: true,
+            width: 150
           },
           {
             title: '状态',
@@ -166,15 +215,16 @@ function Dict() {
           {
             title: '备注',
             dataIndex: 'remark',
-            width: 150,
-            hideInSearch: true
+            ellipsis: true,
+            hideInSearch: true,
+            width: 150
           },
           {
             title: '创建时间',
             dataIndex: 'createTime',
-            width: 150,
             renderText: (text: string) => formatDate(text),
-            hideInSearch: true
+            hideInSearch: true,
+            width: 150
           },
           {
             title: '操作',
@@ -189,13 +239,13 @@ function Dict() {
                   icon={<Iconify icon="mingcute:edit-line" />}
                   onClick={() => onHandleRow(false, record)}
                 >
-                  编辑
+                  修改
                 </Button>
                 <Button
                   type="link"
                   icon={<Iconify icon="material-symbols:delete-outline" />}
                   danger
-                  onClick={() => onDelDict(record.dictId!)}
+                  onClick={() => onDelDict(record.dictCode)}
                 >
                   删除
                 </Button>
@@ -204,11 +254,11 @@ function Dict() {
           }
         ]}
         scroll={{ x: 'max-content' }}
-        rowKey="dictId"
+        rowKey="dictCode"
       />
 
       <ModalForm
-        formRef={formRef}
+        formRef={modalFormRef}
         title={title}
         open={modalVisit}
         width={500}
@@ -220,17 +270,24 @@ function Dict() {
         onOpenChange={setModalVisit}
         onFinish={onFinish}
       >
+        <ProFormText label="字典类型" name="dictType" disabled={true} />
         <ProFormText
-          label="字典名称"
-          name="dictName"
-          placeholder="请输入字典名称"
-          rules={[{ required: true, message: '字典名称不能为空' }]}
+          label="数据标签"
+          name="dictLabel"
+          placeholder="请输入数据标签"
+          rules={[{ required: true, message: '数据标签不能为空' }]}
         />
         <ProFormText
-          label="字典类型"
-          name="dictType"
-          placeholder="请输入字典类型"
-          rules={[{ required: true, message: '字典类型不能为空' }]}
+          label="数据键值"
+          name="dictValue"
+          placeholder="请输入数据键值"
+          rules={[{ required: true, message: '数据键值不能为空' }]}
+        />
+        <ProFormDigit
+          label="显示排序"
+          name="dictSort"
+          min={1}
+          rules={[{ required: true, message: '排序不能为空' }]}
         />
         <ProFormRadio.Group
           label="状态"
