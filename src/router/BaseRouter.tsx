@@ -38,7 +38,7 @@ export const baseRouter: RouteObject[] = [
 export const dynamicRoutes: MenuItemType[] = [
   {
     name: 'DictData',
-    path: '/system/dict-data/:dictId',
+    path: '/system/dict-data/:dictType',
     hidden: true,
     redirect: 'noRedirect',
     component: 'system/dict/data',

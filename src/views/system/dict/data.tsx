@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import {
   getDictDataList,
-  getDictType,
   getDictOptionselect,
   updateData,
   addDictData,
@@ -14,11 +13,10 @@ import {
   ProFormText,
   ProFormRadio,
   ProFormTextArea,
-  ProFormInstance,
   ActionType,
   ProFormDigit
 } from '@ant-design/pro-components'
-import { Button, FormInstance, Tag } from 'antd'
+import { Button, Form, FormInstance, Tag } from 'antd'
 import type { DictDataType } from '@/types/dict'
 import { Iconify } from '@/components/icon'
 import { useDict } from '@/hook'
@@ -26,32 +24,21 @@ import { message, modal } from '@/components/baseNotice'
 import { useParams } from 'react-router-dom'
 
 function Dict() {
-  const { dictId } = useParams()
+  const { dictType } = useParams()
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [modalVisit, setModalVisit] = useState(false)
   const [title, setTitle] = useState('')
   const [dictTypeOptions, setDictTypeOptions] = useState('')
-  const [dictType, setDictType] = useState('')
+  const [recordDictType, setRecordDictType] = useState(dictType)
 
-  const modalFormRef = useRef<ProFormInstance>()
+  const [modalFormRef] = Form.useForm()
   const actionRef = useRef<ActionType>()
   const formRef = useRef<FormInstance>()
   const sys_normal_disable = useDict('sys_normal_disable')
 
   useEffect(() => {
-    getTypes()
     getTypeList()
   }, [])
-
-  const getTypes = () => {
-    getDictType(dictId!).then((res) => {
-      setDictType(res.data.dictType)
-      formRef?.current?.setFieldsValue({
-        dictType: res.data.dictType
-      })
-      actionRef?.current?.reload()
-    })
-  }
 
   const getTypeList = () => {
     getDictOptionselect().then((res) => {
@@ -70,12 +57,14 @@ function Dict() {
   }
 
   const onCler = () => {
-    modalFormRef?.current?.resetFields()
+    modalFormRef?.resetFields()
   }
 
   const onHandleRow = (isAdd: boolean, record?: DictDataType) => {
     onCler()
-    modalFormRef?.current?.setFieldsValue(isAdd ? { dictType } : { ...record, dictType })
+    modalFormRef?.setFieldsValue(
+      isAdd ? { dictType: recordDictType } : { ...record, dictType: recordDictType }
+    )
     setTitle(isAdd ? '添加字典类型' : '编辑字典类型')
     setModalVisit(true)
   }
@@ -84,7 +73,7 @@ function Dict() {
     const ids = keys ? keys : selectedRowKeys.join(',')
     modal.confirm({
       title: '系统提示',
-      content: `是否确认删除字典编号为"${ids}"的数据项？`,
+      content: `是否确认删除字典编码为"${ids}"的数据项？`,
       onOk() {
         delDictData(ids).then(() => {
           message.success('删除成功')
@@ -95,10 +84,10 @@ function Dict() {
   }
 
   const onFinish = async () => {
-    modalFormRef.current
+    modalFormRef
       ?.validateFields()
       .then(async (value) => {
-        const data: DictDataType = modalFormRef?.current?.getFieldsValue(true)
+        const data: DictDataType = modalFormRef?.getFieldsValue(true)
         if (data.dictCode) {
           updateData(data).then(() => {
             message.success('修改成功')
@@ -113,9 +102,7 @@ function Dict() {
           })
         }
       })
-      .catch((errorInfo) => {
-        console.log('errorInfo', errorInfo)
-      })
+      .catch((errorInfo) => {})
   }
 
   return (
@@ -123,7 +110,6 @@ function Dict() {
       <ProTable<DictDataType>
         actionRef={actionRef}
         formRef={formRef}
-        manualRequest={true}
         defaultSize="small"
         rowSelection={{
           selectedRowKeys,
@@ -134,6 +120,7 @@ function Dict() {
         }}
         request={async (params) => {
           const searchValue = formRef?.current?.getFieldsValue()
+          setRecordDictType(searchValue.dictType)
           const res = await getDictDataList({
             ...searchValue,
             pageNum: params.current,
@@ -167,6 +154,7 @@ function Dict() {
             title: '字典名称',
             dataIndex: 'dictType',
             valueType: 'select',
+            initialValue: dictType,
             fieldProps: {
               options: dictTypeOptions,
               allowClear: false
@@ -258,14 +246,11 @@ function Dict() {
       />
 
       <ModalForm
-        formRef={modalFormRef}
+        form={modalFormRef}
         title={title}
         open={modalVisit}
         width={500}
         layout="horizontal"
-        modalProps={{
-          forceRender: true
-        }}
         labelCol={{ span: 4 }}
         onOpenChange={setModalVisit}
         onFinish={onFinish}

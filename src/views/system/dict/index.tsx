@@ -7,10 +7,9 @@ import {
   ProFormText,
   ProFormRadio,
   ProFormTextArea,
-  ProFormInstance,
   ActionType
 } from '@ant-design/pro-components'
-import { Button, Tag } from 'antd'
+import { Button, Form, Tag } from 'antd'
 import { useThemeToken } from '@/theme/hooks'
 import type { DictType } from '@/types/dict'
 import { Iconify } from '@/components/icon'
@@ -25,12 +24,12 @@ function Dict() {
   const [modalVisit, setModalVisit] = useState(false)
   const [title, setTitle] = useState('')
 
-  const formRef = useRef<ProFormInstance>()
+  const [formRef] = Form.useForm()
   const ref = useRef<ActionType>()
   const sys_normal_disable = useDict('sys_normal_disable')
 
   const onTypeClick = (record: DictType) => {
-    navigate('/system/dict-data/' + record.dictId)
+    navigate('/system/dict-data/' + record.dictType)
   }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -38,12 +37,12 @@ function Dict() {
   }
 
   const onCler = () => {
-    formRef?.current?.resetFields()
+    formRef?.resetFields()
   }
 
   const onHandleRow = (isAdd: boolean, record?: DictType) => {
     onCler()
-    formRef?.current?.setFieldsValue(isAdd ? {} : record)
+    formRef?.setFieldsValue(isAdd ? {} : record)
     setTitle(isAdd ? '添加字典类型' : '编辑字典类型')
     setModalVisit(true)
   }
@@ -63,10 +62,10 @@ function Dict() {
   }
 
   const onFinish = async () => {
-    formRef.current
+    formRef
       ?.validateFields()
       .then(async () => {
-        const data: DictType = formRef?.current?.getFieldsValue(true)
+        const data: DictType = formRef?.getFieldsValue(true)
         if (data.dictId) {
           updateDict(data).then(() => {
             message.success('修改成功')
@@ -208,14 +207,11 @@ function Dict() {
       />
 
       <ModalForm
-        formRef={formRef}
+        form={formRef}
         title={title}
         open={modalVisit}
         width={500}
         layout="horizontal"
-        modalProps={{
-          forceRender: true
-        }}
         labelCol={{ span: 4 }}
         onOpenChange={setModalVisit}
         onFinish={onFinish}
