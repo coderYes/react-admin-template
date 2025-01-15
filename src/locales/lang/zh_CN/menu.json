@@ -24,5 +24,9 @@
   "Gen": "代码生成",
   "Swagger": "系统接口",
   "Source": "海瑞克源码",
-  "DictData": "字典数据"
+  "DictData": "字典数据",
+  "Component": "组件",
+  "Editor": "富文本",
+  "Icon": "图标",
+  "Scroll": "滚动"
 }

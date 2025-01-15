@@ -24,5 +24,9 @@
   "Gen": "Gen",
   "Swagger": "Swagger",
   "Source": "Source",
-  "DictData": "DictData"
+  "DictData": "DictData",
+  "Component": "Component",
+  "Editor": "Editor",
+  "Icon": "Icon",
+  "Scroll": "Scroll"
 }

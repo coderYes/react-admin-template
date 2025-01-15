@@ -38,7 +38,7 @@ function Menu() {
 
   const handleAddMenu = (record?: MenuNode) => {
     onCler()
-    formRef?.setFieldsValue(record ? { parentId: record.parentId } : {})
+    formRef?.setFieldsValue(record && record.menuId ? { parentId: record.menuId } : { parentId: 0 })
     setTitle('添加菜单')
     setModalVisit(true)
   }
