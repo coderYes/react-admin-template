@@ -37,7 +37,7 @@ export function useCurrentRouteMeta() {
     })
 
     if (matchedRouteMeta) {
-      setCurrentRouteMeta({ ...matchedRouteMeta })
+      setCurrentRouteMeta({ ...matchedRouteMeta, path: pathname })
     } else {
       push(HOMEPAGE)
     }

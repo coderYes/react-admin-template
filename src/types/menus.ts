@@ -33,3 +33,26 @@ export interface MenuItemType {
 export interface BaseMenuItemType extends MenuItemType {
   outlet?: any
 }
+
+export interface MenuNode {
+  menuId: string
+  menuName: string
+  parentId: string
+  orderNum: number
+  path: string
+  component: string
+  query: string
+  isFrame: string
+  isCache: string
+  menuType: string
+  visible: string
+  status: string
+  perms: string
+  icon: string
+  createBy: string
+  createTime: string
+  updateBy: string
+  updateTime: string | null
+  remark: string
+  children?: MenuNode[]
+}

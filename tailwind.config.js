@@ -26,6 +26,9 @@ export default {
       addUtilities({
         '.mbe-0': {
           'margin-block-end': '0 !important'
+        },
+        '.pt-full': {
+          'padding-top': '100%'
         }
       })
     }

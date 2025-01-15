@@ -16,6 +16,7 @@
     "@loadable/component": "^5.16.4",
     "antd": "^5.22.5",
     "axios": "^1.7.7",
+    "clsx": "^2.1.1",
     "color": "^4.2.3",
     "dayjs": "^1.11.13",
     "highlight.js": "^11.11.0",
@@ -45,6 +46,7 @@
     "simplebar-react": "^3.3.0",
     "sonner": "^1.7.1",
     "styled-components": "^6.1.13",
+    "tailwind-merge": "^2.6.0",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

@@ -38,7 +38,6 @@ function User() {
           // 第一个参数中一定会有 pageSize 和  current ，这两个参数是 antd 的规范
           params
         ) => {
-          console.log(params)
           await requestMock()
           return {
             data: [

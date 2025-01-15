@@ -65,7 +65,7 @@ function Dict() {
     modalFormRef?.setFieldsValue(
       isAdd ? { dictType: recordDictType } : { ...record, dictType: recordDictType }
     )
-    setTitle(isAdd ? '添加字典类型' : '编辑字典类型')
+    setTitle(isAdd ? '添加字典数据' : '编辑字典数据')
     setModalVisit(true)
   }
 

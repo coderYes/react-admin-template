@@ -1,6 +1,6 @@
 import { LazyLoad, SuspenseHOC } from './LazyLoad'
 import type { RouteObject } from 'react-router-dom'
-import type { MenuItemType, MenuType } from '@/types/menus'
+import type { MenuItemType, MenuNode, MenuType } from '@/types/menus'
 import { createRef } from 'react'
 import { hasPermiOr, hasRoleOr } from './auth'
 
@@ -68,4 +68,63 @@ export function filterDynamicRoutes(routes: MenuItemType[]) {
     }
   })
   return res
+}
+
+
+
+interface Config {
+  id: keyof MenuNode
+  parentId: keyof MenuNode
+  childrenList: string
+}
+
+export function handleTree(
+  data: MenuNode[],
+  id: keyof MenuNode = 'menuId',
+  parentId: keyof MenuNode = 'parentId',
+  children: string = 'children'
+): MenuNode[] {
+  const config: Config = {
+    id,
+    parentId,
+    childrenList: children
+  }
+
+  const childrenListMap: { [key: string]: MenuNode[] } = {}
+  const nodeIds: { [key: string]: MenuNode } = {}
+  const tree: MenuNode[] = []
+
+  for (const d of data) {
+    const parentIdValue = d[config.parentId] as unknown as string
+    if (!childrenListMap[parentIdValue]) {
+      childrenListMap[parentIdValue] = []
+    }
+    nodeIds[d[config.id] as unknown as string] = d
+    childrenListMap[parentIdValue].push(d)
+  }
+
+  for (const d of data) {
+    const parentIdValue = d[config.parentId] as unknown as string
+    if (!nodeIds[parentIdValue]) {
+      tree.push(d)
+    }
+  }
+
+  for (const t of tree) {
+    adaptToChildrenList(t)
+  }
+
+  function adaptToChildrenList(node: MenuNode): void {
+    const nodeId = node[config.id] as unknown as string
+    if (childrenListMap[nodeId]) {
+      ;(node as any)[config.childrenList] = childrenListMap[nodeId]
+    }
+    if ((node as any)[config.childrenList]) {
+      for (const child of (node as any)[config.childrenList]) {
+        adaptToChildrenList(child)
+      }
+    }
+  }
+
+  return tree
 }

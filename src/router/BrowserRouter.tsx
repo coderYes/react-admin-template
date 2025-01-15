@@ -35,7 +35,7 @@ function BrowserRouter() {
             alwaysShow: false,
             meta: {
               title: '首页',
-              icon: 'Home',
+              icon: 'simple-icons:odysee',
               noCache: false,
               link: ''
             },

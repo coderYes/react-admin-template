@@ -22,7 +22,7 @@ export function useRouteToMenuFn() {
             </div>
           ),
           icon: item.meta.icon ? (
-            <Iconify icon={item.meta.icon} size={24} className="ant-menu-item-icon" />
+            <Iconify icon={item.meta.icon} size={22} className="ant-menu-item-icon" />
           ) : null,
           children: item.children ? convertToMenuItems(item.children, newPath) : undefined
         }

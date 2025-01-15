@@ -80,9 +80,7 @@ function Dict() {
           })
         }
       })
-      .catch((errorInfo) => {
-        console.log('errorInfo', errorInfo)
-      })
+      .catch((errorInfo) => {})
   }
 
   return (

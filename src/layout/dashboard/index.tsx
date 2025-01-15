@@ -93,6 +93,7 @@ const scrollbarStyles = {
 const AdminLayoutWrapper = styled.div<{ $themeMode?: ThemeMode }>`
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
     top: 32px;
   }
 
