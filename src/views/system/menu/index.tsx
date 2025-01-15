@@ -9,13 +9,14 @@ import {
   ProFormTreeSelect,
   ProFormDigit
 } from '@ant-design/pro-components'
-import type { MenuNode } from '@/types/menus'
+import type { MenuNode, MenuType } from '@/types/menus'
 import { Button, Form, Space, Tag } from 'antd'
 import { useDict } from '@/hook'
 import { message, modal } from '@/components/baseNotice'
 import { handleTree } from '@/utils/menu'
 import { Iconify } from '@/components/icon'
 import IconPopover from './cpn/IconPopover'
+import AuthButton from '@/components/auth/authButton'
 
 function Menu() {
   const [modalVisit, setModalVisit] = useState(false)
@@ -26,6 +27,7 @@ function Menu() {
   const [isExpandAll, setIsExpandAll] = useState(false)
   const [menuIds, setMenuIds] = useState<string[]>([])
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
+  const [menuType, setMenuType] = useState<MenuType>('M')
 
   const [formRef] = Form.useForm()
   const ref = useRef<ActionType>()
@@ -38,15 +40,17 @@ function Menu() {
 
   const handleAddMenu = (record?: MenuNode) => {
     onCler()
-    formRef?.setFieldsValue(record && record.menuId ? { parentId: record.menuId } : { parentId: 0 })
+    formRef?.setFieldsValue(record && record.menuId ? { parentId: record.menuId } : { parentId: '0' })
     setTitle('添加菜单')
+    setMenuType(record && record.menuId ? record.menuType : 'M')
     setModalVisit(true)
   }
 
-  const handleUpdateMenu = (record?: MenuNode) => {
+  const handleUpdateMenu = (record: MenuNode) => {
     onCler()
     formRef?.setFieldsValue(record)
     setTitle('修改菜单')
+    setMenuType(record?.menuType)
     setModalVisit(true)
   }
 
@@ -111,6 +115,7 @@ function Menu() {
           className: 'mbe-0'
         }}
         request={async (params) => {
+          console.log('formRef', formRef)
           const res = await getListMenu({
             ...params
           })
@@ -128,9 +133,11 @@ function Menu() {
         }}
         pagination={false}
         toolBarRender={(action) => [
-          <Button type="primary" onClick={() => handleAddMenu()}>
-            新增
-          </Button>,
+          <AuthButton perms="system:menu:add">
+            <Button type="primary" onClick={() => handleAddMenu()}>
+              新增
+            </Button>
+          </AuthButton>,
           <Button
             icon={<Iconify icon="fluent:arrow-sort-20-filled" />}
             onClick={() => toggleExpandAll(!isExpandAll)}
@@ -194,31 +201,37 @@ function Menu() {
             hideInSearch: true,
             render: (_, record) => (
               <Space>
-                <Button
-                  className="px-0"
-                  type="link"
-                  icon={<Iconify icon="tabler:plus" />}
-                  onClick={() => handleAddMenu(record)}
-                >
-                  新增
-                </Button>
-                <Button
-                  className="px-0"
-                  type="link"
-                  icon={<Iconify icon="mingcute:edit-line" />}
-                  onClick={() => handleUpdateMenu(record)}
-                >
-                  编辑
-                </Button>
-                <Button
-                  className="px-0"
-                  type="link"
-                  icon={<Iconify icon="material-symbols:delete-outline" />}
-                  danger
-                  onClick={() => onDelDict(record)}
-                >
-                  删除
-                </Button>
+                <AuthButton perms="system:menu:add">
+                  <Button
+                    className="px-0"
+                    type="link"
+                    icon={<Iconify icon="tabler:plus" />}
+                    onClick={() => handleAddMenu(record)}
+                  >
+                    新增
+                  </Button>
+                </AuthButton>
+                <AuthButton perms="system:menu:edit">
+                  <Button
+                    className="px-0"
+                    type="link"
+                    icon={<Iconify icon="mingcute:edit-line" />}
+                    onClick={() => handleUpdateMenu(record)}
+                  >
+                    编辑
+                  </Button>
+                </AuthButton>
+                <AuthButton perms="system:menu:remove">
+                  <Button
+                    className="px-0"
+                    type="link"
+                    icon={<Iconify icon="material-symbols:delete-outline" />}
+                    danger
+                    onClick={() => onDelDict(record)}
+                  >
+                    删除
+                  </Button>
+                </AuthButton>
               </Space>
             )
           }
@@ -280,6 +293,9 @@ function Menu() {
               value: 'F'
             }
           ]}
+          fieldProps={{
+            onChange: (e) => setMenuType(e.target.value)
+          }}
         />
         <div className="relative ant-col ant-col-12 css-dev-only-do-not-override-1n83h6c">
           <ProFormText
@@ -317,47 +333,84 @@ function Menu() {
           min={0}
           rules={[{ required: true, message: '请输入排序' }]}
         />
-        <ProFormRadio.Group
-          label="是否外链"
-          name="isFrame"
-          initialValue={'1'}
-          tooltip="选择是外链则路由地址需要以`http(s)://`开头"
-          colProps={{ span: 12 }}
-          options={[
-            {
-              label: '是',
-              value: '0'
-            },
-            {
-              label: '否',
-              value: '1'
-            }
-          ]}
-        />
-        <ProFormText
-          label="路由地址"
-          name="path"
-          tooltip="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头"
-          colProps={{ span: 12 }}
-          placeholder="请输入路由地址"
-          rules={[{ required: true, message: '路由地址不能为空' }]}
-        />
-        <ProFormRadio.Group
-          label="显示状态"
-          name="visible"
-          initialValue={'0'}
-          tooltip="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问"
-          colProps={{ span: 12 }}
-          options={sys_show_hide.map((item) => ({ label: item.label, value: item.value }))}
-        />
-        <ProFormRadio.Group
-          label="菜单状态"
-          name="status"
-          initialValue={'0'}
-          tooltip="选择停用则路由将不会出现在侧边栏，也不能被访问"
-          colProps={{ span: 12 }}
-          options={sys_normal_disable.map((item) => ({ label: item.label, value: item.value }))}
-        />
+        {menuType !== 'F' && (
+          <ProFormRadio.Group
+            label="是否外链"
+            name="isFrame"
+            initialValue={'1'}
+            tooltip="选择是外链则路由地址需要以`http(s)://`开头"
+            colProps={{ span: 12 }}
+            options={[
+              {
+                label: '是',
+                value: '0'
+              },
+              {
+                label: '否',
+                value: '1'
+              }
+            ]}
+          />
+        )}
+        {menuType !== 'F' && (
+          <ProFormText
+            label="路由地址"
+            name="path"
+            tooltip="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头"
+            colProps={{ span: 12 }}
+            placeholder="请输入路由地址"
+            rules={[{ required: true, message: '路由地址不能为空' }]}
+          />
+        )}
+
+        {menuType === 'C' && (
+          <ProFormText
+            label="组件路径"
+            name="component"
+            tooltip="访问的组件路径，如：`system/user/index`，默认在`views`目录下"
+            colProps={{ span: 12 }}
+            placeholder="请输入组件路径"
+            rules={[{ required: true, message: '组件路径不能为空' }]}
+          />
+        )}
+        {menuType !== 'M' && (
+          <ProFormText
+            label="权限字符"
+            name="perms"
+            tooltip="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`"
+            colProps={{ span: 12 }}
+            placeholder="请输入权限字符"
+          />
+        )}
+        {menuType === 'C' && (
+          <ProFormText
+            label="路由参数"
+            name="query"
+            tooltip="访问路由的默认传递参数，如：`{'id': 1, 'name': 'ry'}`"
+            colProps={{ span: 12 }}
+            placeholder="请输入路由参数"
+          />
+        )}
+        {menuType !== 'F' && (
+          <ProFormRadio.Group
+            label="显示状态"
+            name="visible"
+            initialValue={'0'}
+            tooltip="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问"
+            colProps={{ span: 12 }}
+            options={sys_show_hide.map((item) => ({ label: item.label, value: item.value }))}
+          />
+        )}
+        {menuType !== 'F' && (
+          <ProFormRadio.Group
+            label="菜单状态"
+            name="status"
+            initialValue={'0'}
+            tooltip="选择停用则路由将不会出现在侧边栏，也不能被访问"
+            colProps={{ span: 12 }}
+            options={sys_normal_disable.map((item) => ({ label: item.label, value: item.value }))}
+          />
+        )}
       </ModalForm>
     </>
   )

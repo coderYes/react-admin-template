@@ -16,6 +16,7 @@ import { Iconify } from '@/components/icon'
 import { useDict } from '@/hook'
 import { message, modal } from '@/components/baseNotice'
 import { useNavigate } from 'react-router-dom'
+import AuthButton from '@/components/auth/authButton'
 
 function Dict() {
   const navigate = useNavigate()
@@ -111,12 +112,16 @@ function Dict() {
           pageSize: 10
         }}
         toolBarRender={(action) => [
-          <Button type="primary" onClick={() => onHandleRow(true)}>
-            新增
-          </Button>,
-          <Button danger onClick={() => onDelDict()}>
-            批量删除
-          </Button>
+          <AuthButton perms="system:dict:add">
+            <Button type="primary" onClick={() => onHandleRow(true)}>
+              新增
+            </Button>
+          </AuthButton>,
+          <AuthButton perms="system:dict:remove">
+            <Button danger onClick={() => onDelDict()}>
+              批量删除
+            </Button>
+          </AuthButton>
         ]}
         columns={[
           {
@@ -181,21 +186,25 @@ function Dict() {
             hideInSearch: true,
             render: (_, record) => (
               <span>
-                <Button
-                  type="link"
-                  icon={<Iconify icon="mingcute:edit-line" />}
-                  onClick={() => onHandleRow(false, record)}
-                >
-                  编辑
-                </Button>
-                <Button
-                  type="link"
-                  icon={<Iconify icon="material-symbols:delete-outline" />}
-                  danger
-                  onClick={() => onDelDict(record.dictId!)}
-                >
-                  删除
-                </Button>
+                <AuthButton perms="system:dict:edit">
+                  <Button
+                    type="link"
+                    icon={<Iconify icon="mingcute:edit-line" />}
+                    onClick={() => onHandleRow(false, record)}
+                  >
+                    编辑
+                  </Button>
+                </AuthButton>
+                <AuthButton perms="system:dict:remove">
+                  <Button
+                    type="link"
+                    icon={<Iconify icon="material-symbols:delete-outline" />}
+                    danger
+                    onClick={() => onDelDict(record.dictId!)}
+                  >
+                    删除
+                  </Button>
+                </AuthButton>
               </span>
             )
           }

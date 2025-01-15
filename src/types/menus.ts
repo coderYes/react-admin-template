@@ -44,7 +44,7 @@ export interface MenuNode {
   query: string
   isFrame: string
   isCache: string
-  menuType: string
+  menuType: MenuType
   visible: string
   status: string
   perms: string
