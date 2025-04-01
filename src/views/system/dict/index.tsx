@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { addDict, delDict, getDict, updateDict } from '@/api/dict'
+import { addDict, delDict, getDict, refreshCache, updateDict } from '@/api/dict'
 import { formatDate } from '@/utils/time'
 import {
   ProTable,
@@ -16,9 +16,11 @@ import { Iconify } from '@/components/icon'
 import { useDict } from '@/hook'
 import { message, modal } from '@/components/baseNotice'
 import { useNavigate } from 'react-router-dom'
+import rootStore from '@/store'
 import AuthButton from '@/components/auth/authButton'
 
 function Dict() {
+  const { dictStore } = rootStore
   const navigate = useNavigate()
   const { colorPrimary } = useThemeToken()
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -59,6 +61,13 @@ function Dict() {
           ref?.current?.reload()
         })
       }
+    })
+  }
+
+  const handleRefreshCache = () => {
+    refreshCache().then(() => {
+      message.success('刷新成功')
+      dictStore.cleanDict()
     })
   }
 
@@ -121,7 +130,10 @@ function Dict() {
             <Button danger onClick={() => onDelDict()}>
               批量删除
             </Button>
-          </AuthButton>
+          </AuthButton>,
+          <Button type="primary" danger onClick={() => handleRefreshCache()}>
+            刷新缓存
+          </Button>
         ]}
         columns={[
           {

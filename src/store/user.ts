@@ -29,16 +29,16 @@ class UserStore {
     return new Promise((resolve, reject) => {
       getInfo()
         .then((res) => {
-          const user = res.user
+          const user = res.data.user
           const avatar =
             user.avatar == '' || user.avatar == null
               ? defAva
               : import.meta.env.VITE_APP_BASE_API + user.avatar
-
           runInAction(() => {
-            this.roles = res.roles && res.roles.length > 0 ? res.roles : ['ROLE_DEFAULT']
-            this.permissions = res.permissions || []
-            this.id = String(user.userId)
+            this.roles =
+              res.data.roles && res.data.roles.length > 0 ? res.data.roles : ['ROLE_DEFAULT']
+            this.permissions = res.data.permissions || []
+            this.id = String(user.id)
             this.name = user.userName
             this.avatar = avatar
           })
@@ -60,18 +60,15 @@ class UserStore {
       try {
         // 登录
         const loginRes = await login(data)
-        setToken(loginRes.token!)
-        this.token = loginRes.token!
-
-        // 获取菜单列表
-        const menuRes = await getRouters()
-        this.setMenuList(menuRes.data)
+        setToken(loginRes.data)
+        this.token = loginRes.data
 
         // 获取用户信息
         await this.getInfo()
 
         resolve()
       } catch (error) {
+        console.log('error', error)
         reject(error)
       }
     })

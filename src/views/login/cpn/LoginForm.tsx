@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd'
+import { Button, Checkbox, Col, Form, Input, message, Row } from 'antd'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCodeImg } from '@/api/login'
@@ -14,7 +14,6 @@ function LoginForm() {
   const [form] = Form.useForm()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
-  const [captchaEnabled, setCaptchaEnabled] = useState(true)
   const [codeUrl, setCodeUrl] = useState('')
 
   useEffect(() => {
@@ -35,13 +34,8 @@ function LoginForm() {
 
   const getCode = () => {
     getCodeImg().then((res: { data: VerifyCodeType }) => {
-      const isCaptchaEnabled =
-        res.data.captchaEnabled === undefined ? true : res.data.captchaEnabled
-      setCaptchaEnabled(isCaptchaEnabled)
-      if (isCaptchaEnabled) {
-        setCodeUrl(res.data.img)
-        form.setFieldValue('uuid', res.data.uuid)
-      }
+      setCodeUrl(res.data.image)
+      form.setFieldValue('uuid', res.data.key)
     })
   }
 
@@ -71,12 +65,11 @@ function LoginForm() {
         .login(data)
         .then(() => {
           navigate('/')
+          message.success('登录成功')
         })
         .catch(() => {
           // 重新获取验证码
-          if (captchaEnabled) {
-            getCode()
-          }
+          getCode()
         })
         .finally(() => {
           setLoading(false)

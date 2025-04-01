@@ -1,4 +1,4 @@
-import request from '@/service'
+import request, { ResponseType } from '@/service'
 import type { LoginType } from '@/types/login'
 
 /**
@@ -7,7 +7,7 @@ import type { LoginType } from '@/types/login'
  * @returns
  */
 export function login(data: LoginType) {
-  return request.post({
+  return request.post<ResponseType<string>>({
     url: '/login',
     headers: {
       isToken: false
@@ -22,7 +22,7 @@ export function login(data: LoginType) {
  */
 export function getCodeImg() {
   return request.get({
-    url: '/captchaImage',
+    url: '/captcha',
     headers: {
       isToken: false
     },
@@ -36,7 +36,7 @@ export function getCodeImg() {
  */
 export function getInfo() {
   return request.get({
-    url: '/getInfo'
+    url: '/system/getInfo'
   })
 }
 

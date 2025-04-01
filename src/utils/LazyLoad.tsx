@@ -10,9 +10,7 @@ const keysArray = Object.keys(modules)
 const loadables: any = loadable
 
 export function LazyLoad(url: string) {
-  // /user/:id/:name -> /user
-  const cleanedPath = url.replace(/\/:[a-zA-Z]+/g, '')
-  const moduleKey = `/src/views/${cleanedPath}.tsx`
+  const moduleKey = `/src/views${url}.tsx`
   const isExist = keysArray.includes(moduleKey)
   const ComponentNode = isExist
     ? loadables(async () => {

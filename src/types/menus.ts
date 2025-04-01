@@ -18,17 +18,11 @@ export interface MenuItemType {
   name: string
   path: string
   hidden: boolean
-  redirect: string
   component: string
   query: string
-  alwaysShow: boolean
   meta: MetaType
-  status?: string
-  visible?: string
   menuType: MenuType
-  permissions?: string[]
-  roles?: string[]
-  children?: MenuItemType[] | null
+  children?: MenuItemType[]
 }
 export interface BaseMenuItemType extends MenuItemType {
   outlet?: any

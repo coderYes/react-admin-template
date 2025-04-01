@@ -6,7 +6,7 @@ import request from '@/service'
  */
 export function getRouters() {
   return request.get({
-    url: '/getRouters'
+    url: '/system/getRouters'
   })
 }
 

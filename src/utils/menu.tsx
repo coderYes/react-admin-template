@@ -9,22 +9,20 @@ import { hasPermiOr, hasRoleOr } from './auth'
  * @param menus 菜单列表
  * @returns
  */
-export function assembleRouter(menus: MenuItemType[]): RouteObject[] {
+export function assembleRouter(menus: MenuItemType[], currentPath: string = ''): RouteObject[] {
   let routes: RouteObject[] = []
 
-  menus
-    .filter((item) => item.redirect)
-    .forEach((item) => {
-      const transformedItem: RouteObject = {
-        path: item.path,
-        element: item.menuType === 'M' ? SuspenseHOC() : LazyLoad(item.component)
-      }
+  menus.forEach((item) => {
+    const transformedItem: RouteObject = {
+      path: currentPath ? `${currentPath}${item.path}` : item.path,
+      element: item.menuType === 'M' ? SuspenseHOC() : LazyLoad(item.component)
+    }
 
-      if (item.children && item.children.length > 0) {
-        transformedItem.children = assembleRouter(item.children)
-      }
-      routes.push(transformedItem)
-    })
+    if (item.children && item.children.length > 0) {
+      transformedItem.children = assembleRouter(item.children, item.path)
+    }
+    routes.push(transformedItem)
+  })
 
   return routes
 }
@@ -36,41 +34,37 @@ export function flattenTree(
 ): MenuItemType[] {
   let result: MenuItemType[] = []
 
-  menus
-    .filter((item) => item.redirect)
-    .forEach((m) => {
-      const newPath = currentPath ? `${currentPath}/${m.path}` : m.path
-      if (m.menuType !== ignoreType) {
-        const newNode = { ...m, nodeRef: createRef(), path: newPath }
-        result.push(newNode)
-      }
+  menus.forEach((m) => {
+    const newPath = currentPath ? `${currentPath}${m.path}` : m.path
+    if (m.menuType !== ignoreType) {
+      const newNode = { ...m, nodeRef: createRef(), path: newPath }
+      result.push(newNode)
+    }
 
-      if (m.children && m.children.length > 0) {
-        const ft = flattenTree(m.children, ignoreType, newPath)
-        result = result.concat(ft)
-      }
-    })
+    if (m.children && m.children.length > 0) {
+      const ft = flattenTree(m.children, ignoreType, newPath)
+      result = result.concat(ft)
+    }
+  })
   return result
 }
 
 // 动态路由遍历，验证是否具备权限
-export function filterDynamicRoutes(routes: MenuItemType[]) {
-  const res: MenuItemType[] = []
-  routes.forEach((route) => {
-    if (route.permissions) {
-      if (hasPermiOr(route.permissions)) {
-        res.push(route)
-      }
-    } else if (route.roles) {
-      if (hasRoleOr(route.roles)) {
-        res.push(route)
-      }
-    }
-  })
-  return res
-}
-
-
+// export function filterDynamicRoutes(routes: MenuItemType[]) {
+//   const res: MenuItemType[] = []
+//   routes.forEach((route) => {
+//     if (route.permissions) {
+//       if (hasPermiOr(route.permissions)) {
+//         res.push(route)
+//       }
+//     } else if (route.roles) {
+//       if (hasRoleOr(route.roles)) {
+//         res.push(route)
+//       }
+//     }
+//   })
+//   return res
+// }
 
 interface Config {
   id: keyof MenuNode

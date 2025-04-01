@@ -121,3 +121,13 @@ export function delDictData(dictCode: string) {
     url: `/system/dict/data/${dictCode}`
   })
 }
+
+/**
+ * 刷新字典缓存
+ * @returns
+ */
+export function refreshCache() {
+  return request.delete({
+    url: '/system/dict/type/refreshCache'
+  })
+}

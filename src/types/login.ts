@@ -1,6 +1,6 @@
 export interface VerifyCodeType {
-  img: string
-  uuid: string
+  image: string
+  key: string
   captchaEnabled?: boolean
 }
 

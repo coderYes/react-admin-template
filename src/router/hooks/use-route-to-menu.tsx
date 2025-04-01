@@ -11,11 +11,11 @@ export function useRouteToMenuFn() {
 
   const convertToMenuItems = (items: MenuItemType[], currentPath: string = ''): ItemType[] => {
     return items
-      .filter((item) => !item.hidden && item.redirect && item.menuType !== 'F')
+      .filter((item) => !item.hidden && item.menuType !== 'F')
       .map((item) => {
-        const newPath = currentPath ? `${currentPath}/${item.path}` : item.path
+        const initialPath = currentPath ? `${currentPath}${item.path}` : item.path
         const menuItem: ItemType = {
-          key: newPath,
+          key: initialPath,
           label: (
             <div className="inline-flex items-center justify-between">
               <div className="">{t(item.name)}</div>
@@ -24,7 +24,7 @@ export function useRouteToMenuFn() {
           icon: item.meta.icon ? (
             <Iconify icon={item.meta.icon} size={22} className="ant-menu-item-icon" />
           ) : null,
-          children: item.children ? convertToMenuItems(item.children, newPath) : undefined
+          children: item.children ? convertToMenuItems(item.children, initialPath) : undefined
         }
         return menuItem
       })

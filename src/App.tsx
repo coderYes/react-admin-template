@@ -7,8 +7,8 @@ import Logo from '@/assets/icons/ic-logo.svg'
 
 function App() {
   return (
-    <BaseAntdConfig>
-      <AntdApp>
+    <AntdApp>
+      <BaseAntdConfig>
         <Helmet>
           <title>React Admin Template</title>
           <link rel="icon" href={Logo} />
@@ -16,8 +16,8 @@ function App() {
         <BaseNotice />
 
         <BrowserRouter />
-      </AntdApp>
-    </BaseAntdConfig>
+      </BaseAntdConfig>
+    </AntdApp>
   )
 }
 

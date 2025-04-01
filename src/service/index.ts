@@ -1,16 +1,9 @@
-import { UserType } from '@/types/user'
 import Request from './request'
 
 export interface ResponseType<T = any> {
   code: number
-  data?: T
-  rows?: T[]
-  total?: number
-  msg: string
-  token?: string
-  permissions?: string[]
-  roles?: string[]
-  user: UserType
+  message: string
+  data: T
 }
 
 const request = new Request({

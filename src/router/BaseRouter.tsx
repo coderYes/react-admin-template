@@ -17,13 +17,7 @@ export const baseRouter: RouteObject[] = [
         <AdminLayout />
       </AuthHOC>
     ),
-    children: [
-      { index: true, element: <Navigate to={HOMEPAGE} replace /> },
-      {
-        path: '/system/dashboard/workbench',
-        element: <Dashboard />
-      }
-    ]
+    children: [{ index: true, element: <Navigate to={HOMEPAGE} replace /> }]
   },
   {
     path: '/login',
@@ -32,25 +26,5 @@ export const baseRouter: RouteObject[] = [
   {
     path: '*',
     element: <Navigate to="/404" replace />
-  }
-]
-
-export const dynamicRoutes: MenuItemType[] = [
-  {
-    name: 'DictData',
-    path: '/system/dict-data/:dictType',
-    hidden: true,
-    redirect: 'noRedirect',
-    component: 'system/dict/data',
-    query: '',
-    alwaysShow: false,
-    meta: {
-      title: '字典数据',
-      icon: 'Home',
-      noCache: false,
-      link: ''
-    },
-    menuType: 'C',
-    permissions: ['system:dict:list']
   }
 ]

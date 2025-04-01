@@ -39,7 +39,7 @@ class Request {
         const code = res.data.code || 200
         const codeStr = `${code}`
         // 获取错误信息
-        const msg = errorCode[codeStr as ErrorCodeKey] || res.data.msg || errorCode['default']
+        const msg = errorCode[codeStr as ErrorCodeKey] || res.data.message || errorCode['default']
         // 二进制数据则直接返回
         if (res.request.responseType === 'blob' || res.request.responseType === 'arraybuffer') {
           return res.data
