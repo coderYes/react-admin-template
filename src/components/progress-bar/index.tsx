@@ -1,12 +1,11 @@
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { useEffect, useState } from 'react'
-
-import { usePathname } from '@/router/hooks'
+import { useLocation } from 'react-router-dom'
 import { useThemeToken } from '@/theme/hooks'
 
 export default function ProgressBar() {
-  const pathname = usePathname()
+  const { pathname } = useLocation()
   const { colorPrimary } = useThemeToken()
 
   const [mounted, setMounted] = useState(false)

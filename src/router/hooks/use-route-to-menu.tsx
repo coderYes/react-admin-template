@@ -1,37 +1,55 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Iconify } from '@/components/icon'
-import { MenuItemType, ItemType } from '@/types/menus'
+import { MenuItemType, RouteChild, Route } from '@/types/menus'
 
+const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 /**
  *   routes -> menus
  */
 export function useRouteToMenuFn() {
   const { t } = useTranslation()
 
-  const convertToMenuItems = (items: MenuItemType[], currentPath: string = ''): ItemType[] => {
-    return items
-      .filter((item) => !item.hidden && item.menuType !== 'F')
-      .map((item) => {
-        const initialPath = currentPath ? `${currentPath}${item.path}` : item.path
-        const menuItem: ItemType = {
-          key: initialPath,
-          label: (
-            <div className="inline-flex items-center justify-between">
-              <div className="">{t(item.name)}</div>
-            </div>
-          ),
-          icon: item.meta.icon ? (
-            <Iconify icon={item.meta.icon} size={22} className="ant-menu-item-icon" />
-          ) : null,
-          children: item.children ? convertToMenuItems(item.children, initialPath) : undefined
+  const convertToMenuItems = (items: MenuItemType[]): Route => {
+    const menuData: Route = {
+      path: '/system',
+      children: [
+        {
+          path: HOMEPAGE,
+          name: t('Home'),
+          icon: <Iconify icon="majesticons:home" size={16} />
         }
-        return menuItem
-      })
+      ]
+    }
+
+    const handleRoutes = (menus: MenuItemType[], currentPath: string = '') => {
+      let routeChild: RouteChild[] = []
+      menus
+        .filter((m) => !m.hidden)
+        .forEach((item) => {
+          const route: RouteChild = {
+            path: currentPath ? `/system${currentPath}${item.path}` : `/system${item.path}`,
+            name: t(item.name),
+            icon: <Iconify icon={item.meta.icon} size={16} />
+          }
+
+          if (item.children && item.children.length > 0) {
+            const assembleRouteChild = handleRoutes(item.children, item.path)
+            route.children = assembleRouteChild
+          }
+          routeChild.push(route)
+        })
+      return routeChild
+    }
+
+    const routeChild = handleRoutes(items)
+    menuData.children?.push(...routeChild)
+
+    return menuData
   }
 
   const routeToMenuFn = useCallback(
-    (items: MenuItemType[]): ItemType[] => {
+    (items: MenuItemType[]): Route => {
       return convertToMenuItems(items)
     },
     [t]

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import type { RouteObject } from 'react-router-dom'
@@ -22,9 +22,9 @@ function BrowserRouter() {
     try {
       if (roles.length) {
         const res = await getRouters()
-        userStore.setMenuList(res.data)
         const permissionRoutes = assembleRouter(res.data)
-        baseRouter[0].children?.push(...permissionRoutes)
+        userStore.setMenuList(res.data)
+        baseRouter[1].children?.push(...permissionRoutes)
       }
       const finalRoutes = [...baseRouter, ...errorRouter]
       const browserRouter = createBrowserRouter(finalRoutes as unknown as RouteObject[])

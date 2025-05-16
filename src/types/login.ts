@@ -1,10 +1,10 @@
-export interface VerifyCodeType {
+export interface IVerifyCodeType {
   image: string
   key: string
   captchaEnabled?: boolean
 }
 
-export interface LoginType {
+export interface ILoginType {
   username: string
   password: string
   code: string

@@ -1,10 +1,9 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import { MenuItemType } from '@/types/menus'
 import { makePersistable } from 'mobx-persist-store'
-import { LoginType } from '@/types/login'
-import { getInfo, login, logout } from '@/api/login'
+import { ILoginType } from '@/types/login'
+import { getInfo, login } from '@/api/login'
 import { getToken, removeToken, setToken } from '@/utils/auth'
-import { getRouters } from '@/api/menu'
 
 const defAva = 'https://api.dicebear.com/7.x/miniavs/svg?seed=1'
 class UserStore {
@@ -55,7 +54,7 @@ class UserStore {
     this.menuList = menuList
   }
 
-  login(data: LoginType): Promise<void> {
+  login(data: ILoginType): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
         // 登录
@@ -68,7 +67,6 @@ class UserStore {
 
         resolve()
       } catch (error) {
-        console.log('error', error)
         reject(error)
       }
     })
@@ -76,17 +74,22 @@ class UserStore {
 
   logout(): Promise<void> {
     return new Promise((resolve, reject) => {
-      logout(this.token)
-        .then(() => {
-          this.token = ''
-          this.roles = []
-          this.permissions = []
-          removeToken()
-          resolve()
-        })
-        .catch((error) => {
-          reject(error)
-        })
+      // logout(this.token)
+      //   .then(() => {
+      //     this.token = ''
+      //     this.roles = []
+      //     this.permissions = []
+      //     removeToken()
+      //     resolve()
+      //   })
+      //   .catch((error) => {
+      //     reject(error)
+      //   })
+      this.token = ''
+      this.roles = []
+      this.permissions = []
+      removeToken()
+      resolve()
     })
   }
 }

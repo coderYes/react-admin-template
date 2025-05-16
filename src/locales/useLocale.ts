@@ -10,6 +10,7 @@ type Language = {
   icon: string
   label: string
   antdLocal: AntdLocal
+  proLocal: 'zh-CN' | 'zh-TW' | 'en-US' | 'it-IT' | 'ko-KR' | undefined
   abbr: string
 }
 
@@ -19,6 +20,7 @@ export const LANGUAGE_MAP: Record<Locale, Language> = {
     label: 'Chinese',
     icon: 'ic-locale_zh_CN',
     antdLocal: zh_CN,
+    proLocal: 'zh-CN',
     abbr: 'CN'
   },
   [LocalEnum.en_US]: {
@@ -26,6 +28,7 @@ export const LANGUAGE_MAP: Record<Locale, Language> = {
     label: 'English',
     icon: 'ic-locale_en_US',
     antdLocal: en_US,
+    proLocal: 'en-US',
     abbr: 'US'
   }
 }

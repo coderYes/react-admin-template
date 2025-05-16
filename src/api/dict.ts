@@ -1,13 +1,14 @@
-import request from '@/service'
+import request, { IResponseType } from '@/service'
+import { IDictDataType } from '@/types/dict'
 
 /**
  * 获取字典数据
  * @param dictCode 字典类型
  * @returns
  */
-export function getDictByKey(dictCode: string) {
-  return request.get({
-    url: `/system/dict/data/type/${dictCode}`
+export function getDictByCode(dictCode: string) {
+  return request.get<IResponseType<IDictDataType>>({
+    url: `/system/dict/data/code/${dictCode}`
   })
 }
 
@@ -17,7 +18,7 @@ export function getDictByKey(dictCode: string) {
  */
 export function getDict(params: any) {
   return request.get({
-    url: '/system/dict/type/list',
+    url: '/system/dict/list',
     params
   })
 }
@@ -28,7 +29,7 @@ export function getDict(params: any) {
  */
 export function addDict(data: any) {
   return request.post({
-    url: '/system/dict/type',
+    url: '/system/dict/add',
     data
   })
 }
@@ -39,7 +40,7 @@ export function addDict(data: any) {
  */
 export function delDict(ids: string) {
   return request.delete({
-    url: '/system/dict/type/' + ids
+    url: '/system/dict/delete/' + ids
   })
 }
 
@@ -49,7 +50,7 @@ export function delDict(ids: string) {
  */
 export function updateDict(data: any) {
   return request.put({
-    url: '/system/dict/type',
+    url: '/system/dict/edit',
     data
   })
 }
@@ -68,57 +69,12 @@ export function getDictDataList(params: any) {
 
 /**
  * 查询字典类型详细
- * @param dictId 字典编码
+ * @param dictCode 字典编码
  * @returns
  */
-export function getDictType(dictId: string) {
+export function getDictCode(dictCode: string) {
   return request.get({
-    url: `/system/dict/type/${dictId}`
-  })
-}
-
-/**
- * 获取字典选择框列表
- * @returns
- */
-export function getDictOptionselect() {
-  return request.get({
-    url: '/system/dict/type/optionselect'
-  })
-}
-
-/**
- * 新增字典数据
- * @param data
- * @returns
- */
-export function addDictData(data: any) {
-  return request.post({
-    url: '/system/dict/data',
-    data
-  })
-}
-
-/**
- * 修改字典数据
- * @param data
- * @returns
- */
-export function updateData(data: any) {
-  return request.put({
-    url: '/system/dict/data',
-    data
-  })
-}
-
-/**
- * 删除字典数据
- * @param dictCode
- * @returns
- */
-export function delDictData(dictCode: string) {
-  return request.delete({
-    url: `/system/dict/data/${dictCode}`
+    url: `/system/dict/${dictCode}`
   })
 }
 
@@ -128,6 +84,19 @@ export function delDictData(dictCode: string) {
  */
 export function refreshCache() {
   return request.delete({
-    url: '/system/dict/type/refreshCache'
+    url: '/system/dict/refreshCache'
+  })
+}
+
+/**
+ * 批量操作字典数据
+ * @param dictCode 字典编码
+ * @param data 字典数据
+ * @returns
+ */
+export function batchDictData(dictCode: string, data: IDictDataType[]) {
+  return request.post({
+    url: `/system/dict/data/batchDictData/${dictCode}`,
+    data
   })
 }

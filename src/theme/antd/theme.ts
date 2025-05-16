@@ -18,43 +18,53 @@ const customThemeTokenConfig: ThemeConfig['token'] = {
   borderRadiusLG: 8
 }
 
+const colorPrimarys: {
+  [k in ThemeColorPresets]: string
+} = {
+  default: '#006be6',
+  green: '#0d9496',
+  purple: '#7166f0',
+  red: '#bb1b1b',
+  blue: '#0960be',
+  brown: '#efbd48'
+}
+
+const colorPrimarysBg: {
+  [k in ThemeColorPresets]: string
+} = {
+  default: '#D9E9FB',
+  green: '#DBEFF0',
+  purple: '#EAE8FD',
+  red: '#F6E3DB',
+  blue: '#DAE7F5',
+  brown: '#FDF5E4'
+}
+
+const darkCustomizedTheme = {
+  colorBgLayout: '#14161A',
+  colorBgContainer: '#1C1E23',
+  colorBgElevated: '#1C1E23'
+}
+
 const customComponentConfig: ThemeConfig['components'] = {
   Breadcrumb: {
     fontSize: 12,
     separatorMargin: 4
-  },
-  Menu: {
-    fontSize: 14,
-    colorFillAlter: 'transparent',
-    itemColor: 'rgb(145, 158, 171)',
-    motionDurationMid: '0.125s',
-    motionDurationSlow: '0.125s'
   }
-}
-
-const colorPrimarys: {
-  [k in ThemeColorPresets]: string
-} = {
-  default: '#4096ff',
-  green: '#00A76F',
-  purple: '#722ed1',
-  red: '#cf1322',
-  blue: '#2f54eb',
-  brown: '#fda92d'
 }
 
 const themeModeToken: Record<'dark' | 'light', ThemeConfig> = {
   dark: {
     token: {
-      colorBgLayout: '#161c24',
-      colorBgContainer: '#212b36',
-      colorBgElevated: '#161c24'
+      colorBgLayout: darkCustomizedTheme.colorBgLayout,
+      colorBgContainer: darkCustomizedTheme.colorBgContainer,
+      colorBgElevated: darkCustomizedTheme.colorBgElevated
     },
     components: {
       Modal: {
-        headerBg: '#212b36',
-        contentBg: '#212b36',
-        footerBg: '#212b36'
+        headerBg: '#1C1E23',
+        contentBg: '#1C1E23',
+        footerBg: '#1C1E23'
       },
       Notification: {}
     }
@@ -74,6 +84,8 @@ export {
   customThemeTokenConfig,
   customComponentConfig,
   colorPrimarys,
+  colorPrimarysBg,
   themeModeToken,
-  pageTransition
+  pageTransition,
+  darkCustomizedTheme
 }

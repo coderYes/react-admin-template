@@ -47,7 +47,7 @@ class Request {
         if (code === 401) {
           if (!isRelogin.show) {
             isRelogin.show = true
-            modal.confirm({
+            modal.error({
               title: '系统提示',
               content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
               onOk() {
@@ -55,9 +55,6 @@ class Request {
                 removeToken()
                 deleteCache('userInfo')
                 location.href = '/'
-              },
-              onCancel() {
-                isRelogin.show = false
               }
             })
           }
@@ -87,10 +84,7 @@ class Request {
         } else if (errorMessage.includes('Request failed with status code')) {
           errorMessage = '接口' + errorMessage.substr(errorMessage.length - 3) + '异常'
         }
-        message.error({
-          content: errorMessage,
-          duration: 5 * 1000
-        })
+        message.error(errorMessage)
         return err
       }
     )

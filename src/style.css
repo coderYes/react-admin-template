@@ -1,0 +1,10 @@
+/* pro-components 没有继承antd menu的主题token */
+:root {
+  --ant-menu-submenu: #ffffff;
+}
+.ant-menu-submenu-popup {
+  backdrop-filter: inherit;
+}
+.ant-menu-light.ant-menu-submenu-popup > .ant-menu {
+  background: var(--ant-menu-submenu);
+}

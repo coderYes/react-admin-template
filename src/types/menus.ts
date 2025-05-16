@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 export interface ItemType {
   key: string
   label: React.ReactNode
@@ -49,4 +51,17 @@ export interface MenuNode {
   updateTime: string | null
   remark: string
   children?: MenuNode[]
+}
+
+export interface Route {
+  path?: string
+  children?: RouteChild[]
+}
+
+export interface RouteChild {
+  exact?: boolean
+  icon?: ReactNode
+  name: string
+  path: string
+  children?: RouteChild[]
 }

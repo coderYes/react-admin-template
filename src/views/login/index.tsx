@@ -4,7 +4,7 @@ import { getToken } from '@/utils/auth'
 import { Navigate } from 'react-router-dom'
 import * as motion from 'motion/react-client'
 import LoginForm from './cpn/LoginForm'
-import LocalePicker from '@/layout/dashboard/common/locale-picker'
+import LocalePicker from '@/layout/dashboard/components/locale-picker'
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 

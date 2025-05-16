@@ -1,10 +1,10 @@
 import { IconButton, Iconify, SvgIcon } from '@/components/icon'
 import { useThemeToken } from '@/theme/hooks'
 import { Card, Drawer, Select, Switch } from 'antd'
-import { CSSProperties, useState } from 'react'
+import { CSSProperties, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemeColorPresets, ThemeLayout, ThemeMode } from '@/types/enum'
-import { colorPrimarys, pageTransition } from '@/theme/antd/theme'
+import { colorPrimarys, darkCustomizedTheme, pageTransition } from '@/theme/antd/theme'
 import Color from 'color'
 import rootStore from '@/store'
 
@@ -16,8 +16,7 @@ export default function SettingButton() {
       themeMode,
       themeColorPresets,
       themeLayout,
-      breadCrumb,
-      multiTab,
+      darkHeader,
       darkSidebar,
       pageTransAnimation
     }
@@ -25,6 +24,17 @@ export default function SettingButton() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { colorPrimary, colorBgBase, colorTextSecondary, colorTextTertiary, colorBgContainer } =
     useThemeToken()
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--ant-menu-submenu',
+      (darkSidebar && themeLayout !== ThemeLayout.Top) ||
+        (darkHeader && themeLayout === ThemeLayout.Top) ||
+        themeMode === ThemeMode.Dark
+        ? darkCustomizedTheme.colorBgContainer
+        : '#ffffff'
+    )
+  }, [darkSidebar, darkHeader, themeLayout, themeMode])
 
   const style: CSSProperties = {
     backdropFilter: 'blur(20px)',
@@ -38,9 +48,14 @@ export default function SettingButton() {
       themeMode
     })
   }
-  const setThemeLayout = (themeLayout: ThemeLayout) => {
+  const setThemeLayout = (themeLayout: ThemeLayout, darkHeader: boolean) => {
+    let isDarkHeader = false
+    if (darkHeader) {
+      isDarkHeader = themeLayout === ThemeLayout.Side ? false : true
+    }
     themeStore.setSettings({
-      themeLayout
+      themeLayout,
+      darkHeader: isDarkHeader
     })
   }
   const setThemeColorPresets = (themeColorPresets: ThemeColorPresets) => {
@@ -48,19 +63,16 @@ export default function SettingButton() {
       themeColorPresets
     })
   }
-  const setBreadCrumn = (checked: boolean) => {
-    themeStore.setSettings({
-      breadCrumb: checked
-    })
-  }
-  const setMultiTab = (checked: boolean) => {
-    themeStore.setSettings({
-      multiTab: checked
-    })
-  }
+
   const setDarkSidebar = (checked: boolean) => {
     themeStore.setSettings({
       darkSidebar: checked
+    })
+  }
+
+  const setDarkHeader = (checked: boolean) => {
+    themeStore.setSettings({
+      darkHeader: checked
     })
   }
 
@@ -135,53 +147,70 @@ export default function SettingButton() {
             <div className="mb-3 text-base font-semibold" style={{ color: colorTextSecondary }}>
               {t('sys.setting.layout')}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-2">
               <Card
-                onClick={() => setThemeLayout(ThemeLayout.Vertical)}
-                className="h-24 cursor-pointer"
+                onClick={() => setThemeLayout(ThemeLayout.Mix, darkHeader)}
+                className="h-12 cursor-pointer"
                 style={{ flexGrow: 1, flexShrink: 0 }}
                 styles={{
                   body: {
                     padding: 0,
                     display: 'flex',
+                    flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '100%'
                   }
                 }}
               >
-                <div className="flex h-full w-7 flex-shrink-0 flex-col gap-1 p-1">
+                <div className="flex h-4 w-full items-center justify-between px-1">
+                  <div className="flex items-center gap-0.5">
+                    <div
+                      className="h-1.5 w-1.5 shrink-0 rounded"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Mix)
+                      }}
+                    />
+                    <div
+                      className="h-[3px] w-2 shrink-0 rounded opacity-50"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Mix)
+                      }}
+                    />
+                  </div>
                   <div
-                    className="h-2 w-2 flex-shrink-0 rounded"
+                    className="h-1.5 w-1.5 shrink-0 rounded"
                     style={{
-                      background: layoutBackground(ThemeLayout.Vertical)
-                    }}
-                  />
-                  <div
-                    className="h-1 w-full flex-shrink-0 rounded opacity-50"
-                    style={{
-                      background: layoutBackground(ThemeLayout.Vertical)
-                    }}
-                  />
-                  <div
-                    className="h-1 max-w-[12px] flex-shrink-0 rounded opacity-20"
-                    style={{
-                      background: layoutBackground(ThemeLayout.Vertical)
+                      background: layoutBackground(ThemeLayout.Mix)
                     }}
                   />
                 </div>
-                <div className="h-full w-full flex-1 flex-grow p-1">
+                <div className="flex items-center gap-1 h-full w-full flex-1 grow px-1 pb-1">
+                  <div className="flex h-full flex-shrink-0 flex-col gap-1 w-3.5 pt-0.5">
+                    <div
+                      className="h-[3px] w-full flex-shrink-0 rounded opacity-50"
+                      style={{ background: layoutBackground(ThemeLayout.Mix) }}
+                    />
+                    <div
+                      className="h-[3px] max-w-[10px] flex-shrink-0 rounded opacity-20"
+                      style={{ background: layoutBackground(ThemeLayout.Mix) }}
+                    />
+                    <div
+                      className="h-[3px] max-w-[10px] flex-shrink-0 rounded opacity-10"
+                      style={{ background: layoutBackground(ThemeLayout.Mix) }}
+                    />
+                  </div>
                   <div
                     className="h-full w-full rounded opacity-20"
                     style={{
-                      background: layoutBackground(ThemeLayout.Vertical)
+                      background: layoutBackground(ThemeLayout.Mix)
                     }}
                   />
                 </div>
               </Card>
               <Card
-                onClick={() => setThemeLayout(ThemeLayout.Mini)}
-                className="h-24 cursor-pointer"
+                onClick={() => setThemeLayout(ThemeLayout.Side, darkHeader)}
+                className="h-12 cursor-pointer"
                 style={{ flexGrow: 1, flexShrink: 0 }}
                 styles={{
                   body: {
@@ -193,24 +222,96 @@ export default function SettingButton() {
                   }
                 }}
               >
-                <div className="flex h-full flex-shrink-0 flex-col gap-1 p-1">
-                  <div
-                    className="h-2 w-2 flex-shrink-0 rounded"
-                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
-                  />
-                  <div
-                    className="h-1 w-full flex-shrink-0 rounded opacity-50"
-                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
-                  />
-                  <div
-                    className="h-1 max-w-[12px] flex-shrink-0 rounded opacity-20"
-                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
-                  />
+                <div className="flex h-full flex-shrink-0 flex-col justify-between gap-1 py-1 pl-1">
+                  <div className="flex items-center gap-0.5">
+                    <div
+                      className="h-1.5 w-1.5 shrink-0 rounded"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Side)
+                      }}
+                    />
+                    <div
+                      className="h-[3px] w-2 shrink-0 rounded opacity-50"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Side)
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-shrink-0 flex-col gap-1 w-3.5">
+                    <div
+                      className="h-[3px] w-full flex-shrink-0 rounded opacity-50"
+                      style={{ background: layoutBackground(ThemeLayout.Side) }}
+                    />
+                    <div
+                      className="h-[3px] max-w-[10px] flex-shrink-0 rounded opacity-20"
+                      style={{ background: layoutBackground(ThemeLayout.Side) }}
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <div
+                      className="h-1.5 w-1.5 shrink-0 rounded"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Side)
+                      }}
+                    />
+                  </div>
                 </div>
                 <div className="h-full w-full flex-1 flex-grow p-1">
                   <div
                     className="h-full w-full rounded opacity-20"
-                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
+                    style={{ background: layoutBackground(ThemeLayout.Side) }}
+                  />
+                </div>
+              </Card>
+              <Card
+                onClick={() => setThemeLayout(ThemeLayout.Top, darkHeader)}
+                className="h-12 cursor-pointer"
+                style={{ flexGrow: 1, flexShrink: 0 }}
+                styles={{
+                  body: {
+                    padding: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%'
+                  }
+                }}
+              >
+                <div className="flex h-4 w-full items-center justify-between px-1">
+                  <div className="flex items-center gap-0.5">
+                    <div
+                      className="h-1.5 w-1.5 shrink-0 rounded"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Top)
+                      }}
+                    />
+                    <div
+                      className="h-[3px] w-2 shrink-0 rounded opacity-50"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Top)
+                      }}
+                    />
+                    <div
+                      className="h-[3px] w-6 shrink-0 rounded opacity-30"
+                      style={{
+                        background: layoutBackground(ThemeLayout.Top)
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="h-1.5 w-1.5 shrink-0 rounded"
+                    style={{
+                      background: layoutBackground(ThemeLayout.Top)
+                    }}
+                  />
+                </div>
+                <div className="flex items-center h-full w-full flex-1 grow px-1 pb-1">
+                  <div
+                    className="h-full w-full rounded opacity-20"
+                    style={{
+                      background: layoutBackground(ThemeLayout.Top)
+                    }}
                   />
                 </div>
               </Card>
@@ -237,6 +338,7 @@ export default function SettingButton() {
                       icon="material-symbols:circle"
                       color={color}
                       size={themeColorPresets === preset ? 24 : 12}
+                      className="transition-all duration-200 ease-in-out transform origin-center"
                     />
                   </div>
                 </Card>
@@ -254,28 +356,6 @@ export default function SettingButton() {
                 className="flex items-center justify-between"
                 style={{ color: colorTextTertiary }}
               >
-                <div>{t('sys.setting.breadCrumb')}</div>
-                <Switch
-                  size="small"
-                  checked={breadCrumb}
-                  onChange={(checked) => setBreadCrumn(checked)}
-                />
-              </div>
-              <div
-                className="flex items-center justify-between"
-                style={{ color: colorTextTertiary }}
-              >
-                <div>{t('sys.setting.tabs')}</div>
-                <Switch
-                  size="small"
-                  checked={multiTab}
-                  onChange={(checked) => setMultiTab(checked)}
-                />
-              </div>
-              <div
-                className="flex items-center justify-between"
-                style={{ color: colorTextTertiary }}
-              >
                 <div>{t('sys.setting.darkSidebar')}</div>
                 <Switch
                   size="small"
@@ -283,6 +363,20 @@ export default function SettingButton() {
                   onChange={(checked) => setDarkSidebar(checked)}
                 />
               </div>
+              {themeLayout !== ThemeLayout.Side && (
+                <div
+                  className="flex items-center justify-between"
+                  style={{ color: colorTextTertiary }}
+                >
+                  <div>{t('sys.setting.darkHeader')}</div>
+                  <Switch
+                    size="small"
+                    checked={darkHeader}
+                    onChange={(checked) => setDarkHeader(checked)}
+                  />
+                </div>
+              )}
+
               <div
                 className="flex items-center justify-between"
                 style={{ color: colorTextTertiary }}

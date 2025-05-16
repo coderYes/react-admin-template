@@ -1,13 +1,13 @@
-import request, { ResponseType } from '@/service'
-import type { LoginType } from '@/types/login'
+import request, { IResponseType } from '@/service'
+import type { ILoginType } from '@/types/login'
 
 /**
  * 用户登录
  * @param data 用户登录信息
  * @returns
  */
-export function login(data: LoginType) {
-  return request.post<ResponseType<string>>({
+export function login(data: ILoginType) {
+  return request.post<IResponseType<string>>({
     url: '/login',
     headers: {
       isToken: false

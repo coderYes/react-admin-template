@@ -29,7 +29,11 @@ const AntdConfig = ({ children }: Props) => {
     <ConfigProvider
       locale={language.antdLocal}
       theme={{
-        token: { colorPrimary, ...customThemeTokenConfig, ...themeModeToken[themeMode].token },
+        token: {
+          colorPrimary,
+          ...customThemeTokenConfig,
+          ...themeModeToken[themeMode].token
+        },
         components: { ...customComponentConfig, ...themeModeToken[themeMode].components },
         algorithm
       }}

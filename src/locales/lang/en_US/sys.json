@@ -15,8 +15,7 @@
       "layout": "Layout",
       "themeColor": "Theme Color",
       "page": "Page",
-      "breadCrumb": "BreadCrumb",
-      "tabs": "Tabs",
+      "darkHeader": "Dark Header",
       "darkSidebar": "Dark Sidebar",
       "transition": {
         "label": "Page transition animation",

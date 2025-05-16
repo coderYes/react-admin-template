@@ -1,12 +1,13 @@
 import { Dropdown, Space } from 'antd'
 import useLocale, { LANGUAGE_MAP } from '@/locales/useLocale'
 import type { MenuProps } from 'antd'
-import { Locale } from '../header'
 import { IconButton, SvgIcon } from '@/components/icon'
+import { LocalEnum } from '@/types/enum'
 
 /**
  * Locale Picker
  */
+type Locale = keyof typeof LocalEnum
 export default function LocalePicker() {
   const { setLocale } = useLocale()
 

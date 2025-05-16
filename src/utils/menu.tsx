@@ -2,11 +2,16 @@ import { LazyLoad, SuspenseHOC } from './LazyLoad'
 import type { RouteObject } from 'react-router-dom'
 import type { MenuItemType, MenuNode, MenuType } from '@/types/menus'
 import { createRef } from 'react'
-import { hasPermiOr, hasRoleOr } from './auth'
+
+interface Config {
+  id: keyof MenuNode
+  parentId: keyof MenuNode
+  childrenList: string
+}
 
 /**
  * 组装路由
- * @param menus 菜单列表
+ * @param menus 路由元信息
  * @returns
  */
 export function assembleRouter(menus: MenuItemType[], currentPath: string = ''): RouteObject[] {
@@ -14,7 +19,7 @@ export function assembleRouter(menus: MenuItemType[], currentPath: string = ''):
 
   menus.forEach((item) => {
     const transformedItem: RouteObject = {
-      path: currentPath ? `${currentPath}${item.path}` : item.path,
+      path: currentPath ? `/system${currentPath}${item.path}` : `/system${item.path}`,
       element: item.menuType === 'M' ? SuspenseHOC() : LazyLoad(item.component)
     }
 
@@ -27,6 +32,13 @@ export function assembleRouter(menus: MenuItemType[], currentPath: string = ''):
   return routes
 }
 
+/**
+ * 树形结构菜单 —> 扁平化菜单
+ * @param menus 树形菜单数据
+ * @param ignoreType 需要忽略的菜单类型，默认'M'
+ * @param currentPath 当前路径前缀
+ * @returns
+ */
 export function flattenTree(
   menus: MenuItemType[],
   ignoreType: MenuType = 'M',
@@ -49,29 +61,14 @@ export function flattenTree(
   return result
 }
 
-// 动态路由遍历，验证是否具备权限
-// export function filterDynamicRoutes(routes: MenuItemType[]) {
-//   const res: MenuItemType[] = []
-//   routes.forEach((route) => {
-//     if (route.permissions) {
-//       if (hasPermiOr(route.permissions)) {
-//         res.push(route)
-//       }
-//     } else if (route.roles) {
-//       if (hasRoleOr(route.roles)) {
-//         res.push(route)
-//       }
-//     }
-//   })
-//   return res
-// }
-
-interface Config {
-  id: keyof MenuNode
-  parentId: keyof MenuNode
-  childrenList: string
-}
-
+/**
+ * 扁平化菜单 —> 树形结构菜单
+ * @param data 扁平数据数组
+ * @param id 节点ID字段名，默认为'menuId'
+ * @param parentId 父节点ID字段名，默认为'parentId'
+ * @param children 子节点列表字段名，默认为'children'
+ * @returns
+ */
 export function handleTree(
   data: MenuNode[],
   id: keyof MenuNode = 'menuId',

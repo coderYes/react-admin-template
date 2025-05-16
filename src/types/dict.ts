@@ -1,27 +1,24 @@
-export interface DictType {
-  dictId?: string
-  dictName: string
-  dictType: string
-  status: string
-  createBy?: string
-  createTime?: string
-  updateBy?: string
-  updateTime?: string | null
-  remark?: string
-}
-export interface DictDataType {
+export interface IDictType {
+  id: number
   dictCode: string
-  dictSort: number
-  dictLabel: string
-  dictValue: string
-  dictType: string
-  cssClass: string
-  listClass: string
-  isDefault: string
-  status: string
+  dictName: string
+  remark?: string
+  status: number
   createBy: string
   createTime: string
   updateBy: string
   updateTime: string | null
-  remark: string
+}
+export interface IDictDataType {
+  id?: number
+  dictCode?: string
+  dictLabel?: string
+  dictValue?: string
+  dictDesc?: string
+  status?: number
+  sort?: number
+  createTime?: string
+  createBy?: string
+  updateTime?: string
+  updateBy?: string
 }

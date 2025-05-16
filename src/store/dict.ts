@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-export interface DictType {
+export interface IDictStoreType {
   key: string
   value: DictValueType[]
 }
@@ -8,12 +8,13 @@ export interface DictType {
 export interface DictValueType {
   label: string
   value: string
-  elTagType: string
-  elTagClass: string
+  desc: string
+  sort: string
+  status: number
 }
 
 class DictStore {
-  dict: DictType[] = []
+  dict: IDictStoreType[] = []
   constructor() {
     makeAutoObservable(this)
   }

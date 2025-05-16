@@ -1,299 +1,289 @@
-import { useRef, useState, useEffect } from 'react'
-import {
-  getDictDataList,
-  getDictOptionselect,
-  updateData,
-  addDictData,
-  delDictData
-} from '@/api/dict'
-import { formatDate } from '@/utils/time'
-import {
-  ProTable,
-  ModalForm,
-  ProFormText,
-  ProFormRadio,
-  ProFormTextArea,
-  ActionType,
-  ProFormDigit
-} from '@ant-design/pro-components'
-import { Button, Form, FormInstance, Tag } from 'antd'
-import type { DictDataType } from '@/types/dict'
-import { Iconify } from '@/components/icon'
+import { batchDictData, getDictByCode, getDictCode } from '@/api/dict'
 import { useDict } from '@/hook'
-import { message, modal } from '@/components/baseNotice'
+import rootStore from '@/store'
+import { colorPrimarys, darkCustomizedTheme } from '@/theme/antd/theme'
+import { IDictDataType, IDictType } from '@/types/dict'
+import {
+  ActionType,
+  EditableProTable,
+  nanoid,
+  ProCard,
+  ProForm,
+  ProFormText,
+  ProFormTextArea
+} from '@ant-design/pro-components'
+import { DataSheetGrid, textColumn, keyColumn } from 'react-datasheet-grid'
+import 'react-datasheet-grid/dist/style.css'
+import { Button, Divider, message, Modal, Space } from 'antd'
+import { observer } from 'mobx-react-lite'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import AuthButton from '@/components/auth/authButton'
+import { ThemeMode } from '@/types/enum'
+import { DataSheetGridWrapper } from './style'
+import { checkDuplicate } from '@/utils'
 
 function Dict() {
-  const { dictType } = useParams()
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [modalVisit, setModalVisit] = useState(false)
-  const [title, setTitle] = useState('')
-  const [dictTypeOptions, setDictTypeOptions] = useState('')
-  const [recordDictType, setRecordDictType] = useState(dictType)
+  const { code } = useParams()
+  const { themeStore } = rootStore
+  const {
+    themeSetting: { themeColorPresets, themeMode }
+  } = themeStore
+  const color = colorPrimarys[themeColorPresets]
+  const darkBgContainer = darkCustomizedTheme.colorBgContainer
 
-  const [modalFormRef] = Form.useForm()
+  const ILLUTR_NORMAL_DISABLE = useDict('ILLUTR_NORMAL_DISABLE')
+  const initialData = Array.from({ length: 100 }, () => ({
+    dictLabel: '',
+    dictValue: '',
+    dictDesc: ''
+  }))
+
   const actionRef = useRef<ActionType>()
-  const formRef = useRef<FormInstance>()
-  const sys_normal_disable = useDict('sys_normal_disable')
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([])
+  const [dataSource, setDataSource] = useState<readonly IDictDataType[]>([])
+  const [importModalPopup, setImportModalPopup] = useState(false)
+  const [importData, setImportData] = useState<IDictDataType[]>(initialData)
 
-  useEffect(() => {
-    getTypeList()
-  }, [])
-
-  const getTypeList = () => {
-    getDictOptionselect().then((res) => {
-      const options = res.data.map((item: any) => {
-        return {
-          label: item.dictName,
-          value: item.dictType
-        }
-      })
-      setDictTypeOptions(options)
-    })
-  }
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
-
-  const onCler = () => {
-    modalFormRef?.resetFields()
-  }
-
-  const onHandleRow = (isAdd: boolean, record?: DictDataType) => {
-    onCler()
-    modalFormRef?.setFieldsValue(
-      isAdd ? { dictType: recordDictType } : { ...record, dictType: recordDictType }
-    )
-    setTitle(isAdd ? '添加字典数据' : '编辑字典数据')
-    setModalVisit(true)
-  }
-
-  const onDelDict = (keys?: string) => {
-    const ids = keys ? keys : selectedRowKeys.join(',')
-    modal.confirm({
-      title: '系统提示',
-      content: `是否确认删除字典编码为"${ids}"的数据项？`,
-      onOk() {
-        delDictData(ids).then(() => {
-          message.success('删除成功')
-          actionRef?.current?.reload()
-        })
+  const getDictDataByCode = () => {
+    getDictByCode(code!).then((res) => {
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setDataSource(res.data)
+        setEditableRowKeys(res.data.map((i) => i.id))
       }
     })
   }
 
-  const onFinish = async () => {
-    modalFormRef
-      ?.validateFields()
-      .then(async (value) => {
-        const data: DictDataType = modalFormRef?.getFieldsValue(true)
-        if (data.dictCode) {
-          updateData(data).then(() => {
-            message.success('修改成功')
-            setModalVisit(false)
-            actionRef?.current?.reload()
-          })
-        } else {
-          addDictData(data).then(() => {
-            message.success('添加成功')
-            setModalVisit(false)
-            actionRef?.current?.reload()
-          })
-        }
-      })
-      .catch((errorInfo) => {})
+  useEffect(() => {
+    getDictDataByCode()
+  }, [])
+
+  const handleDataDelete = (row: IDictDataType) => {
+    const newDataSource = dataSource.filter((item) => item.id !== row.id)
+    setDataSource(newDataSource)
+    setEditableRowKeys(newDataSource.map((i) => i.id!))
+  }
+
+  const handleMoveRow = (row: IDictDataType, direction: 'up' | 'down') => {
+    const newData = [...dataSource]
+    const index = newData.findIndex((item) => item.id === row.id)
+
+    if (index === -1) return
+
+    // 执行交换
+    if (direction === 'up' && index > 0) {
+      ;[newData[index], newData[index - 1]] = [newData[index - 1], newData[index]]
+    } else if (direction === 'down' && index < newData.length - 1) {
+      ;[newData[index], newData[index + 1]] = [newData[index + 1], newData[index]]
+    }
+
+    // 重新计算排序号（从1开始连续）
+    const updatedData = newData.map((item, idx) => ({
+      ...item,
+      sort: idx + 1
+    }))
+
+    setDataSource(updatedData)
+  }
+
+  const handleSave = () => {
+    if (dataSource.some((item) => !item.dictLabel)) return message.error('字典项名称不能为空')
+    if (dataSource.some((item) => !item.dictValue)) return message.error('字典项值不能为空')
+    if (!checkDuplicate(dataSource as IDictDataType[], 'dictValue'))
+      return message.error('字典项值不能重复')
+    if (!checkDuplicate(dataSource as IDictDataType[], 'dictLabel'))
+      return message.error('字典项名称不能重复')
+    batchDictData(code!, [...dataSource]).then(() => {
+      message.success('保存成功')
+      getDictDataByCode()
+    })
+  }
+
+  const handleImport = () => {
+    setImportModalPopup(true)
+  }
+
+  const handleCancel = () => {
+    setImportModalPopup(false)
+    setImportData(initialData)
+  }
+  const handleOk = () => {
+    const maxId = dataSource.reduce((max, item) => Math.max(max, item.id || 0), 0)
+    const filterData = importData.filter((item) => item.dictLabel || item.dictValue)
+    const processedData = filterData.map((item, index) => ({
+      ...item,
+      id: maxId + index + 1,
+      dictCode: code,
+      status: 0,
+      sort: dataSource.length + index + 1
+    }))
+    setDataSource([...dataSource, ...processedData])
+    setEditableRowKeys([...editableKeys, ...processedData.map((i) => i.id)])
+    setImportModalPopup(false)
   }
 
   return (
-    <>
-      <ProTable<DictDataType>
+    <ProCard className="relative">
+      <div className="flex justify-center">
+        <ProForm<IDictType>
+          layout="horizontal"
+          className="w-2/3"
+          request={async () => {
+            const res = await getDictCode(code!)
+            return {
+              ...res.data
+            }
+          }}
+          submitter={false}
+        >
+          <ProFormText label="字典名称" name="dictName" disabled />
+          <ProFormText label="字典编码" name="dictCode" disabled />
+          <ProFormTextArea label="字典描述" name="remark" disabled />
+        </ProForm>
+      </div>
+      <Divider />
+      <EditableProTable<IDictDataType>
         actionRef={actionRef}
-        formRef={formRef}
-        defaultSize="small"
-        rowSelection={{
-          selectedRowKeys,
-          onChange: onSelectChange
-        }}
-        search={{
-          className: 'mbe-0'
-        }}
-        request={async (params) => {
-          const searchValue = formRef?.current?.getFieldsValue()
-          setRecordDictType(searchValue.dictType)
-          const res = await getDictDataList({
-            ...searchValue,
-            pageNum: params.current,
-            pageSize: params.pageSize
-          })
-          return {
-            data: res.rows,
-            success: res.code === 200,
-            total: res.total
-          }
-        }}
-        pagination={{
-          pageSize: 10
-        }}
-        toolBarRender={(action) => [
-          <AuthButton perms="system:dict:add">
-            <Button type="primary" onClick={() => onHandleRow(true)}>
-              新增
-            </Button>
-          </AuthButton>,
-          <AuthButton perms="system:dict:remove">
-            <Button danger onClick={() => onDelDict()}>
-              批量删除
-            </Button>
-          </AuthButton>
-        ]}
         columns={[
           {
-            title: '序号',
-            dataIndex: 'index',
-            width: 64,
-            valueType: 'index'
-          },
-          {
-            title: '字典名称',
-            dataIndex: 'dictType',
-            valueType: 'select',
-            initialValue: dictType,
-            fieldProps: {
-              options: dictTypeOptions,
-              allowClear: false
-            },
-            hideInTable: true
-          },
-          {
-            title: '字典编码',
-            dataIndex: 'dictCode',
-            hideInSearch: true,
-            width: 150
-          },
-          {
-            title: '字典标签',
+            title: '字典项名称',
             dataIndex: 'dictLabel',
-            width: 150
+            formItemProps: {
+              rules: [
+                {
+                  required: true,
+                  whitespace: true,
+                  message: '此项是必填项'
+                },
+                {
+                  max: 20,
+                  whitespace: true,
+                  message: '最长为 20 位'
+                }
+              ]
+            }
           },
           {
-            title: '字典键值',
+            title: '字典项值',
             dataIndex: 'dictValue',
-            hideInSearch: true,
-            width: 150
+            formItemProps: {
+              rules: [
+                {
+                  required: true,
+                  whitespace: true,
+                  message: '此项是必填项'
+                },
+                {
+                  max: 20,
+                  whitespace: true,
+                  message: '最长为 20 位'
+                }
+              ]
+            }
           },
           {
-            title: '字典排序',
-            dataIndex: 'dictSort',
-            hideInSearch: true,
-            width: 150
+            title: '字典项描述',
+            dataIndex: 'dictDesc'
           },
           {
             title: '状态',
             dataIndex: 'status',
-            width: 150,
             valueType: 'select',
             fieldProps: {
-              options: sys_normal_disable.map((item) => ({ label: item.label, value: item.value }))
-            },
-            renderText: (text: string) => {
-              return (
-                <Tag color={text === '0' ? 'success' : 'error'}>
-                  {text === '1' ? '停用' : '正常'}
-                </Tag>
-              )
+              options: ILLUTR_NORMAL_DISABLE.map((item) => ({
+                label: item.label,
+                value: Number(item.value)
+              }))
             }
           },
           {
-            title: '备注',
-            dataIndex: 'remark',
-            ellipsis: true,
-            hideInSearch: true,
-            width: 150
-          },
-          {
-            title: '创建时间',
-            dataIndex: 'createTime',
-            renderText: (text: string) => formatDate(text),
-            hideInSearch: true,
-            width: 150
-          },
-          {
             title: '操作',
-            key: 'action',
-            width: 200,
-            fixed: 'right',
-            hideInSearch: true,
-            render: (_, record) => (
-              <span>
-                <AuthButton perms="system:dict:edit">
-                  <Button
-                    type="link"
-                    icon={<Iconify icon="mingcute:edit-line" />}
-                    onClick={() => onHandleRow(false, record)}
-                  >
-                    修改
-                  </Button>
-                </AuthButton>
-                <AuthButton perms="system:dict:remove">
-                  <Button
-                    type="link"
-                    icon={<Iconify icon="material-symbols:delete-outline" />}
-                    danger
-                    onClick={() => onDelDict(record.dictCode)}
-                  >
-                    删除
-                  </Button>
-                </AuthButton>
-              </span>
-            )
+            valueType: 'option',
+            render: () => {
+              return null
+            }
           }
         ]}
-        scroll={{ x: 'max-content' }}
-        rowKey="dictCode"
+        ghost={true}
+        toolBarRender={() => [
+          <Button onClick={handleImport}>导入</Button>,
+          <Button type="primary" onClick={handleSave}>
+            保存数据
+          </Button>
+        ]}
+        rowKey="id"
+        value={dataSource}
+        onChange={setDataSource}
+        recordCreatorProps={{
+          newRecordType: 'dataSource',
+          record: () => {
+            const maxId = dataSource.reduce((max, item) => Math.max(max, item.id || 0), 0)
+            return {
+              id: maxId + 1,
+              status: 0,
+              sort: dataSource.length + 1,
+              dictCode: code
+            }
+          }
+        }}
+        editable={{
+          type: 'multiple',
+          editableKeys,
+          actionRender: (row, config, defaultDoms) => {
+            return [
+              <Space key={row.id}>
+                <Button type="link" size="small" danger onClick={() => handleDataDelete(row)}>
+                  删除
+                </Button>
+                <Button
+                  type="link"
+                  size="small"
+                  style={{ color }}
+                  onClick={() => handleMoveRow(row, 'up')}
+                >
+                  上移
+                </Button>
+                <Button
+                  type="link"
+                  size="small"
+                  style={{ color }}
+                  onClick={() => handleMoveRow(row, 'down')}
+                >
+                  下移
+                </Button>
+              </Space>
+            ]
+          },
+          onValuesChange: (record, recordList) => {
+            setDataSource(recordList)
+          },
+          onChange: setEditableRowKeys
+        }}
       />
-
-      <ModalForm
-        form={modalFormRef}
-        title={title}
-        open={modalVisit}
-        width={500}
-        layout="horizontal"
-        labelCol={{ span: 4 }}
-        onOpenChange={setModalVisit}
-        onFinish={onFinish}
-      >
-        <ProFormText label="字典类型" name="dictType" disabled={true} />
-        <ProFormText
-          label="数据标签"
-          name="dictLabel"
-          placeholder="请输入数据标签"
-          rules={[{ required: true, message: '数据标签不能为空' }]}
-        />
-        <ProFormText
-          label="数据键值"
-          name="dictValue"
-          placeholder="请输入数据键值"
-          rules={[{ required: true, message: '数据键值不能为空' }]}
-        />
-        <ProFormDigit
-          label="显示排序"
-          name="dictSort"
-          min={1}
-          rules={[{ required: true, message: '排序不能为空' }]}
-        />
-        <ProFormRadio.Group
-          label="状态"
-          name="status"
-          initialValue={'0'}
-          options={sys_normal_disable.map((item) => ({ label: item.label, value: item.value }))}
-          rules={[{ required: true, message: '状态不能为空' }]}
-        />
-        <ProFormTextArea label="备注" name="remark" placeholder="请输入备注" />
-      </ModalForm>
-    </>
+      <Modal width="60%" open={importModalPopup} onCancel={handleCancel} onOk={handleOk}>
+        <div className="h-[500px]">
+          <div className="mt-6">
+            <DataSheetGridWrapper
+              $dark={themeMode === ThemeMode.Dark}
+              $darkBgContainer={darkBgContainer}
+            >
+              <DataSheetGrid
+                height={450}
+                rowHeight={30}
+                autoAddRow={true}
+                value={importData}
+                onChange={setImportData}
+                columns={[
+                  { ...keyColumn('dictLabel', textColumn), title: '字典项名称' },
+                  { ...keyColumn('dictValue', textColumn), title: '字典项值' },
+                  { ...keyColumn('dictDesc', textColumn), title: '字典项描述' }
+                ]}
+              />
+            </DataSheetGridWrapper>
+          </div>
+        </div>
+      </Modal>
+    </ProCard>
   )
 }
 
-export default Dict
+export default observer(Dict)

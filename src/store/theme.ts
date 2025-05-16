@@ -6,10 +6,9 @@ type themeSettingType = {
   themeMode: ThemeMode
   themeColorPresets: ThemeColorPresets
   themeLayout: ThemeLayout
-  breadCrumb: boolean
   darkSidebar: boolean
+  darkHeader: boolean
   themeStretch: boolean
-  multiTab: boolean
   pageTransAnimation: ThemePageTransition
 }
 
@@ -17,11 +16,10 @@ class ThemeStore {
   themeSetting: themeSettingType = {
     themeMode: ThemeMode.Light,
     themeColorPresets: ThemeColorPresets.Default,
-    themeLayout: ThemeLayout.Vertical,
-    breadCrumb: true,
+    themeLayout: ThemeLayout.Mix,
     darkSidebar: false,
+    darkHeader: false,
     themeStretch: true,
-    multiTab: true,
     pageTransAnimation: ThemePageTransition.FadeIn
   }
 

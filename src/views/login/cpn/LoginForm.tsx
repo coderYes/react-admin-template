@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Form, Input, message, Row } from 'antd'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCodeImg } from '@/api/login'
-import { LoginType, VerifyCodeType } from '@/types/login'
+import { ILoginType, IVerifyCodeType } from '@/types/login'
 import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { useNavigate } from 'react-router-dom'
 import rootStore from '@/store'
@@ -33,13 +33,13 @@ function LoginForm() {
   }
 
   const getCode = () => {
-    getCodeImg().then((res: { data: VerifyCodeType }) => {
+    getCodeImg().then((res: { data: IVerifyCodeType }) => {
       setCodeUrl(res.data.image)
       form.setFieldValue('uuid', res.data.key)
     })
   }
 
-  const handleFinish = async (formValue: LoginType) => {
+  const handleFinish = async (formValue: ILoginType) => {
     const uuid = form.getFieldValue('uuid')
     const remember = form.getFieldValue('remember')
     const data = {

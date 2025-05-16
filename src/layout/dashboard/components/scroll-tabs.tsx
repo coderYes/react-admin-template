@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { TabItemType } from '../multiTabs'
+import { TabItemType } from './tabs'
 
 type Props = {
   children: ReactNode

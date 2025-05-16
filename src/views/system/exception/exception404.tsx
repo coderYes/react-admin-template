@@ -24,7 +24,7 @@ function Exception404() {
           <SvgIcon icon="ic-error404" size="400" color={colorPrimary} />
           <Link
             to={HOMEPAGE}
-            style={{ background: colorTextBase, color: colorBgBase }}
+            style={{ background: colorBgBase, color: colorTextBase }}
             className="rounded-md p-4"
           >
             {t('sys.system.exception.back')}

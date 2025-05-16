@@ -1,1 +1,2 @@
-export { useDict } from './use-dict'
+export { useDict } from './useDict'
+export { useProTableSizeObserver } from './useProTableSizeObserver'

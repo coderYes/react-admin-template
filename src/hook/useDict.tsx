@@ -1,32 +1,34 @@
 import { useState, useEffect, useMemo } from 'react'
-import { getDictByKey } from '@/api/dict'
+import { getDictByCode } from '@/api/dict'
 import { DictValueType } from '@/store/dict'
 import rootStore from '@/store'
+import { IDictDataType } from '@/types/dict'
 
-export function useDict(dictType: string) {
+export function useDict(dictCode: string) {
   const { dictStore } = rootStore
 
   const [dictData, setDictData] = useState<DictValueType[]>(() => {
-    const dicts = dictStore.getDict(dictType)
+    const dicts = dictStore.getDict(dictCode)
     return dicts || []
   })
 
   useEffect(() => {
     if (dictData.length === 0) {
-      getDictByKey(dictType).then((res) => {
-        const newDictData = res.data.map((p: any) => ({
+      getDictByCode(dictCode).then((res) => {
+        const newDictData = res.data.map((p: IDictDataType) => ({
           label: p.dictLabel,
           value: p.dictValue,
-          elTagType: p.listClass,
-          elTagClass: p.cssClass
+          desc: p.dictDesc,
+          sort: p.sort,
+          status: p.status
         }))
         if (newDictData.length > 0) {
           setDictData(newDictData)
-          dictStore.setDict(dictType, newDictData)
+          dictStore.setDict(dictCode, newDictData)
         }
       })
     }
-  }, [dictType, dictData.length, dictStore])
+  }, [dictCode, dictData.length, dictStore])
 
   return useMemo(() => dictData, [dictData])
 }

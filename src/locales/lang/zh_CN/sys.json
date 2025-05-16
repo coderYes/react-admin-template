@@ -15,8 +15,7 @@
       "layout": "布局",
       "themeColor": "主题颜色",
       "page": "页面配置",
-      "breadCrumb": "面包屑",
-      "tabs": "标签页",
+      "darkHeader": "深色顶栏",
       "darkSidebar": "深色侧边栏",
       "transition": {
         "label": "页面切换",

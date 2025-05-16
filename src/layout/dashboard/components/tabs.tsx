@@ -1,76 +1,53 @@
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
 import { Dropdown, Tabs, type MenuProps } from 'antd'
-import { useCurrentRouteMeta, useRouter } from '@/router/hooks'
-import { useResponsive, useThemeToken } from '@/theme/hooks'
-import { ThemeLayout, MultiTabOperation } from '@/types/enum'
-import {
-  HEADER_HEIGHT,
-  MULTI_TABS_HEIGHT,
-  NAV_COLLAPSED_WIDTH,
-  NAV_WIDTH,
-  OFFSET_HEADER_HEIGHT
-} from './config'
+import { useFlattenedRoutes, useRouter } from '@/router/hooks'
+import { useThemeToken } from '@/theme/hooks'
+import { MultiTabOperation } from '@/types/enum'
 import { Iconify } from '@/components/icon'
 import { useTranslation } from 'react-i18next'
-import { getTimeStamp } from '@/utils/time'
 import Color from 'color'
-import styled from 'styled-components'
-import rootStore from '@/store'
-import ScrollTabs from './common/scroll-tabs'
+import ScrollTabs from './scroll-tabs'
+import { TabWrapper } from '../style'
+import { matchPath, useMatches } from 'react-router-dom'
 
-const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+const { VITE_ROUTER_PREFIX: PREFIX, VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 
-type Props = {
-  offsetTop?: boolean
-}
 export type TabItemType = {
   key: string
   label: string
   children?: any
   timeStamp?: string
 }
-export default function MultiTabs({ offsetTop = false }: Props) {
+export default function MultiTabs() {
   const { t } = useTranslation()
   const { push } = useRouter()
-
-  const { themeStore } = rootStore
-  const {
-    themeSetting: { themeLayout }
-  } = themeStore
-
+  const flattenedRoutes = useFlattenedRoutes()
+  const matches = useMatches()
+  const themeToken = useThemeToken()
   const [tabs, setTabs] = useState<TabItemType[]>([])
   const [hoveringTabKey, setHoveringTabKey] = useState('')
   const [openDropdownTabKey, setopenDropdownTabKey] = useState('')
 
-  const themeToken = useThemeToken()
-  const { screenMap } = useResponsive()
-  const multiTabsStyle: CSSProperties = {
-    position: 'fixed',
-    top: offsetTop ? OFFSET_HEADER_HEIGHT : HEADER_HEIGHT,
-    left: 0,
-    height: MULTI_TABS_HEIGHT,
-    backgroundColor: Color(themeToken.colorBgElevated).alpha(1).toString(),
-    borderBottom: `1px dashed ${Color(themeToken.colorBorder).alpha(0.6).toString()}`,
-    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    width: '100%'
-  }
-  if (screenMap.md) {
-    multiTabsStyle.right = '0px'
-    multiTabsStyle.left = 'auto'
-    multiTabsStyle.paddingLeft = `${
-      themeLayout === ThemeLayout.Vertical ? NAV_WIDTH : NAV_COLLAPSED_WIDTH
-    }px`
-  }
+  useEffect(() => {
+    const lastRoute = matches.at(-1)
+    if (!lastRoute) return
+    const isExisted = tabs.find((item) => item.key === lastRoute.pathname)
+    if (isExisted) return
+    if (lastRoute.pathname === HOMEPAGE) {
+      setTabs((prev) => [...prev, { key: HOMEPAGE, label: 'Home' }])
+    } else {
+      const matchedRouteMeta = flattenedRoutes.find((item) => {
+        return matchPath(PREFIX + item.path, lastRoute.pathname)
+      })
+      if (matchedRouteMeta) {
+        setTabs((prev) => [...prev, { key: lastRoute.pathname, label: matchedRouteMeta.name }])
+      }
+    }
+  }, [matches])
 
-  // current route meta
-  const currentRouteMeta = useCurrentRouteMeta()
-
-  // active tab
   const activeTabRoutePath = useMemo(() => {
-    if (!currentRouteMeta) return ''
-    const { path } = currentRouteMeta
-    return path
-  }, [currentRouteMeta])
+    return matches.at(-1)?.pathname || ''
+  }, [matches])
 
   const calcTabStyle: (tab: TabItemType) => CSSProperties = useCallback(
     (tab) => {
@@ -93,19 +70,6 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     },
     [activeTabRoutePath, hoveringTabKey, themeToken]
   )
-
-  useEffect(() => {
-    if (!currentRouteMeta) return
-    let { path, name } = currentRouteMeta
-
-    const isExisted = tabs.find((item) => item.key === path)
-    if (!isExisted) {
-      setTabs((prev) => [
-        ...prev,
-        { key: currentRouteMeta.path, label: name, timeStamp: getTimeStamp() }
-      ])
-    }
-  }, [currentRouteMeta])
 
   const handleTabClick = (tab: TabItemType) => {
     push(tab.key)
@@ -275,7 +239,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
           onOpenChange={(open) => onOpenChange(open, tab)}
         >
           <div
-            className="relative mx-px flex select-none items-center px-4 py-1"
+            className="cursor-pointer relative mx-px flex select-none items-center px-4 py-1"
             style={calcTabStyle(tab)}
             onMouseEnter={() => {
               if (tab.key === activeTabRoutePath) return
@@ -307,10 +271,6 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     [t, activeTabRoutePath, hoveringTabKey, tabs.length, menuClick, closeTab, calcTabStyle]
   )
 
-  /**
-   * 所有tab
-   */
-
   const tabItems = useMemo(() => {
     return tabs?.map((tab) => ({
       label: renderTabLabel(tab),
@@ -321,7 +281,14 @@ export default function MultiTabs({ offsetTop = false }: Props) {
 
   const renderTabBar = () => {
     return (
-      <div style={multiTabsStyle} className="z-20 w-full">
+      <div
+        style={{
+          paddingTop: '7px',
+          backgroundColor: Color(themeToken.colorBgElevated).alpha(1).toString(),
+          borderBottom: `1px dashed ${Color(themeToken.colorBorder).alpha(0.6).toString()}`
+        }}
+        className="z-20 w-full"
+      >
         <div className="flex w-full">
           <ScrollTabs tabs={tabs} activeTabRoutePath={activeTabRoutePath}>
             {tabs.map((tab, index) => (
@@ -358,33 +325,3 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     </TabWrapper>
   )
 }
-
-const TabWrapper = styled.div`
-  .anticon {
-    margin: 0px !important;
-  }
-
-  .ant-tabs {
-    height: 100%;
-    .ant-tabs-content {
-      height: 100%;
-    }
-    .ant-tabs-tabpane {
-      height: 100%;
-      & > div {
-        height: 100%;
-      }
-    }
-  }
-
-  .hide-scrollbar {
-    overflow: scroll;
-    flex-shrink: 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-`

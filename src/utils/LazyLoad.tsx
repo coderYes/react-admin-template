@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import { CircleLoading } from '@/components/loading'
 import { Outlet } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import loadable from '@loadable/component'
 import KeepAlive from 'react-activation'
 
@@ -22,9 +21,9 @@ export function LazyLoad(url: string) {
 
   return (
     <Suspense fallback={<CircleLoading />}>
-      <KeepAlive cacheKey={uuidv4()}>
+      {/* <KeepAlive cacheKey={uuidv4()}> */}
         <ComponentNode />
-      </KeepAlive>
+      {/* </KeepAlive> */}
     </Suspense>
   )
 }
