@@ -6,17 +6,17 @@ export interface IResponseType<T = any> {
   data: T
 }
 
-export interface IResListType<T = any> {
-  records: T[]
-  total: number
-  size: number
-  current: number
-  orders: any[]
-  optimizeCountSql: boolean
-  searchCount: boolean
-  maxLimit?: any
-  countId?: any
-  pages: number
+export interface PageResult<T> {
+  records: T[] // 当前页数据列表
+  total: number // 总条数
+  size: number // 每页大小
+  current: number // 当前页码
+  orders: any[] // 排序字段（通常为空数组）
+  optimizeCountSql: boolean // 是否优化count语句
+  searchCount: boolean // 是否进行count查询
+  maxLimit: null | number // 单页分页条数限制
+  countId: null | string // count查询的优化ID
+  pages: number // 总页数
 }
 
 const request = new Request({

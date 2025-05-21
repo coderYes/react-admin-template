@@ -1,5 +1,5 @@
-import request, { IResponseType } from '@/service'
-import { IDictDataType } from '@/types/dict'
+import request, { IResponseType, PageResult } from '@/service'
+import { IDictDataType, IDictType } from '@/types/dict'
 
 /**
  * 获取字典数据
@@ -17,7 +17,7 @@ export function getDictByCode(dictCode: string) {
  * @returns
  */
 export function getDict(params: any) {
-  return request.get({
+  return request.get<IResponseType<PageResult<IDictType>>>({
     url: '/system/dict/list',
     params
   })

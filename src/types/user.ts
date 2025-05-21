@@ -1,13 +1,9 @@
-export interface RoleType {
-  roleId: number
+export interface IRoleType {
+  id: number
   roleName: string
   roleKey: string
   roleSort: number
-  dataScope: string
-  menuCheckStrictly: boolean
-  deptCheckStrictly: boolean
   status: string
-  delFlag: string
   createBy: string
   createTime: string
   updateBy: string
